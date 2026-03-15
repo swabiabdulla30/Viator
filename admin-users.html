@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users – VIATOR Admin</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <div class="admin-sidebar-logo"><a href="admin-dashboard.html"><img src="assets/logo_editorial_transparent.png" alt="Viator Logo"> VIATOR <span>Admin</span></a></div>
+            <nav class="admin-nav">
+                <div class="admin-nav-label">Overview</div>
+                <a class="admin-nav-item" href="admin-dashboard.html"><span class="nav-icon">📊</span> Dashboard</a>
+                <div class="admin-nav-label" style="margin-top:1rem;">Content</div>
+                <a class="admin-nav-item" href="admin-posts.html"><span class="nav-icon">📝</span> Posts</a>
+                <a class="admin-nav-item active" href="admin-users.html"><span class="nav-icon">👥</span> Users</a>
+                <a class="admin-nav-item" href="admin-reports.html"><span class="nav-icon">🚨</span> Reports</a>
+                <div class="admin-nav-label" style="margin-top:1rem;">Account</div>
+                <a class="admin-nav-item" href="index.html" target="_blank"><span class="nav-icon">🌐</span> View
+                    Site</a>
+                <button class="admin-nav-item" style="width:100%;text-align:left;" onclick="logout()"><span
+                        class="nav-icon">🚪</span> Log Out</button>
+            </nav>
+        </aside>
+
+        <main class="admin-main">
+            <div class="admin-topbar">
+                <div>
+                    <div class="admin-page-title">👥 User Management</div>
+                    <p style="color:var(--text-muted);font-size:0.85rem;margin:0;" id="user-count-label"></p>
+                </div>
+                <div class="search-bar" style="max-width:300px;">
+                    <input type="text" id="user-search" placeholder="Search users..." oninput="renderUsers()">
+                    <button class="search-bar-btn" onclick="renderUsers()">Go</button>
+                </div>
+            </div>
+
+            <div style="display:flex;gap:0.5rem;margin-bottom:1.5rem;" id="user-filter-tabs">
+                <button class="tab-btn active" data-status="all" onclick="setStatus(this)">All</button>
+                <button class="tab-btn" data-status="active" onclick="setStatus(this)">Active</button>
+                <button class="tab-btn" data-status="banned" onclick="setStatus(this)">Banned</button>
+            </div>
+
+            <div class="table-wrap">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Email</th>
+                            <th>Joined</th>
+                            <th>Posts</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="users-tbody"></tbody>
+                </table>
+            </div>
+            <div id="users-empty" class="empty-state" style="display:none;">
+                <div class="empty-icon">👤</div>
+                <h3 class="empty-title">No users found</h3>
+            </div>
+        </main>
+    </div>
+
+    <div id="toast-container" class="toast-container"></div>
+    <script src="js/data.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        if (!requireAdmin()) throw new Error();
+        let filterStatus = 'all';
+
+        function setStatus(btn) {
+            document.querySelectorAll('[data-status]').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            filterStatus = btn.dataset.status;
+            renderUsers();
+        }
+
+        function renderUsers() {
+            const q = document.getElementById('user-search').value.trim().toLowerCase();
+            let users = UserDB.getAll().filter(u => u.role !== 'admin');
+            if (filterStatus !== 'all') users = users.filter(u => u.status === filterStatus);
+            if (q) users = users.filter(u => u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q));
+            document.getElementById('user-count-label').textContent = `${users.length} user${users.length !== 1 ? 's' : ''}`;
+
+            const tbody = document.getElementById('users-tbody');
+            const empty = document.getElementById('users-empty');
+            if (users.length === 0) { tbody.innerHTML = ''; empty.style.display = 'flex'; return; }
+            empty.style.display = 'none';
+
+            tbody.innerHTML = users.map(u => {
+                const posts = PostDB.getByUser(u.id).length;
+                const initials = u.name?.[0]?.toUpperCase() || '?';
+                const badgeCls = u.status === 'active' ? 'badge-success' : 'badge-danger';
+                return `<tr>
+        <td>
+          <div style="display:flex;align-items:center;gap:0.75rem;">
+            <div class="nav-avatar" style="width:34px;height:34px;font-size:0.85rem;flex-shrink:0;">${initials}</div>
+            <a href="profile.html?id=${u.id}" target="_blank" style="color:var(--text-primary);font-weight:600;">${u.name}</a>
+          </div>
+        </td>
+        <td style="color:var(--text-secondary);">${u.email}</td>
+        <td style="color:var(--text-muted);font-size:0.82rem;">${formatDate(u.joinedAt)}</td>
+        <td style="font-weight:600;">${posts}</td>
+        <td><span class="badge ${badgeCls}">${u.status}</span></td>
+        <td>
+          <div class="table-actions">
+            ${u.status === 'active'
+                        ? `<button class="btn btn-danger btn-sm" onclick="banUser('${u.id}')">🚫 Ban</button>`
+                        : `<button class="btn btn-primary btn-sm" onclick="unbanUser('${u.id}')">✅ Unban</button>`}
+            <button class="btn btn-ghost btn-sm" onclick="deleteUser('${u.id}')">🗑️</button>
+          </div>
+        </td>
+      </tr>`;
+            }).join('');
+        }
+
+        function banUser(id) {
+            confirmAction('Ban this user? They will not be able to log in.', () => {
+                UserDB.update(id, { status: 'banned' });
+                showToast('User banned.', 'info'); renderUsers();
+            });
+        }
+        function unbanUser(id) { UserDB.update(id, { status: 'active' }); showToast('User unbanned. ✅', 'success'); renderUsers(); }
+        function deleteUser(id) {
+            confirmAction('Permanently delete this user and all their posts?', () => {
+                PostDB.getByUser(id).forEach(p => PostDB.delete(p.id));
+                UserDB.delete(id);
+                showToast('User deleted.', 'info'); renderUsers();
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', renderUsers);
+    </script>
+</body>
+
+</html>

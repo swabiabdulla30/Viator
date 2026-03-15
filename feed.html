@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Feed – VIATOR</title>
+    <meta name="description"
+        content="Browse authentic travel experiences from around the world. Filter by destination, budget, and travel style.">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .feed-layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .feed-sidebar {
+            position: sticky;
+            top: calc(var(--nav-height) + 2rem);
+        }
+
+        .posts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        @media(max-width:900px) {
+            .feed-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .feed-sidebar {
+                position: static;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="nav-logo"><svg class="nav-logo-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 4L12 20L20 4H16.5L12 14L7.5 4H4Z" fill="currentColor"/><path d="M12 8L11 11H13L12 8Z" fill="white"/></svg> VIATOR<span></span></a>
+            <div class="nav-links" id="nav-links"></div>
+            <div class="nav-actions" id="nav-actions"></div>
+            <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+        </div>
+    </nav>
+
+    <main class="page-content">
+        <div class="container">
+            <!-- Sort + Search bar -->
+            <div class="flex-between flex-stack-mobile" style="gap:1.5rem;margin-bottom:2rem;">
+                <div class="search-bar" style="flex:1; width: 100%;">
+                    <input type="text" id="feed-search" placeholder="Search experiences, destinations...">
+                    <button class="search-bar-btn" onclick="applyFilters()">Search</button>
+                </div>
+                <div class="flex gap-1" style="flex-wrap: wrap; justify-content: center;">
+                    <button class="btn btn-ghost btn-sm sort-btn active" data-sort="latest">Latest</button>
+                    <button class="btn btn-ghost btn-sm sort-btn" data-sort="popular">Most Liked</button>
+                    <button class="btn btn-ghost btn-sm sort-btn" data-sort="comments">Most Discussed</button>
+                </div>
+            </div>
+            <div class="feed-layout">
+                <!-- Sidebar Filters -->
+                <aside class="feed-sidebar">
+                    <div class="filter-panel">
+                        <div class="filter-title">🔧 Filters</div>
+
+                        <div class="filter-group">
+                            <div class="filter-group-label">Travel Style</div>
+                            <div class="filter-chips" id="style-chips">
+                                <div class="filter-chip" data-filter="style" data-val="">All</div>
+                                <div class="filter-chip" data-filter="style" data-val="Adventure">🏔️ Adventure</div>
+                                <div class="filter-chip" data-filter="style" data-val="Cultural">🏛️ Cultural</div>
+                                <div class="filter-chip" data-filter="style" data-val="Budget">🎒 Budget</div>
+                                <div class="filter-chip" data-filter="style" data-val="Luxury">💎 Luxury</div>
+                                <div class="filter-chip" data-filter="style" data-val="Solo">🧍 Solo</div>
+                                <div class="filter-chip" data-filter="style" data-val="Family">👨‍👩‍👧 Family</div>
+                            </div>
+                        </div>
+
+                        <div class="filter-group">
+                            <div class="filter-group-label">Budget Range</div>
+                            <div class="filter-chips" id="budget-chips">
+                                <div class="filter-chip" data-filter="budget" data-val="">All</div>
+                                <div class="filter-chip" data-filter="budget" data-val="Budget (Under $50/day)">Budget
+                                </div>
+                                <div class="filter-chip" data-filter="budget" data-val="Mid-range ($50-150/day)">
+                                    Mid-range</div>
+                                <div class="filter-chip" data-filter="budget" data-val="Luxury ($200+/day)">Luxury</div>
+                            </div>
+                        </div>
+
+
+
+                        <button class="btn btn-primary" style="width:100%;justify-content:center;"
+                            onclick="applyFilters()">Apply Filters</button>
+                        <div class="filter-clear" onclick="clearFilters()">✕ Clear all filters</div>
+                    </div>
+                </aside>
+
+                <!-- Posts Grid -->
+                <div>
+                    <div id="feed-status" style="color:var(--text-muted);font-size:0.875rem;margin-bottom:1rem;"></div>
+                    <div class="posts-grid" id="posts-grid"></div>
+                    <div id="feed-empty" class="empty-state" style="display:none;">
+                        <div class="empty-icon">🗺️</div>
+                        <h3 class="empty-title">No experiences found</h3>
+                        <p class="empty-desc">Try adjusting your filters or search query.</p>
+                        <button class="btn btn-ghost" onclick="clearFilters()">Clear Filters</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="toast-container" class="toast-container"></div>    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/effects.js"></script>
+    <script>
+        let activeFilters = { style: '', budget: '', sort: 'latest' };
+
+        // Filter chips
+        document.querySelectorAll('.filter-chip').forEach(chip => {
+            chip.addEventListener('click', function () {
+                const grp = this.dataset.filter;
+                document.querySelectorAll(`.filter-chip[data-filter="${grp}"]`).forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                activeFilters[grp === 'style' ? 'travelStyle' : 'budget'] = this.dataset.val;
+            });
+        });
+        // Default "All" active
+        document.querySelectorAll('.filter-chip[data-val=""]').forEach(c => c.classList.add('active'));
+
+        // Sort buttons
+        document.querySelectorAll('.sort-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                activeFilters.sort = this.dataset.sort;
+                applyFilters();
+            });
+        });
+
+        // Enter key on search
+        document.getElementById('feed-search').addEventListener('keydown', e => {
+            if (e.key === 'Enter') applyFilters();
+        });
+
+        function applyFilters() {
+            const query = document.getElementById('feed-search').value.trim();
+            const filters = {
+                travelStyle: activeFilters.travelStyle || '',
+                budget: activeFilters.budget || '',
+                sort: activeFilters.sort,
+            };
+            renderPosts(PostDB.search(query, filters));
+        }
+
+        function clearFilters() {
+            document.getElementById('feed-search').value = '';
+            activeFilters = { sort: 'latest' };
+            document.querySelectorAll('.filter-chip[data-val=""]').forEach(c => c.classList.add('active'));
+            document.querySelectorAll('.filter-chip:not([data-val=""])').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector('.sort-btn[data-sort="latest"]')?.classList.add('active');
+            applyFilters();
+        }
+
+        function renderPosts(posts) {
+            const grid = document.getElementById('posts-grid');
+            const empty = document.getElementById('feed-empty');
+            const status = document.getElementById('feed-status');
+            const session = SessionDB.get();
+            status.textContent = `${posts.length} experience${posts.length !== 1 ? 's' : ''} found`;
+
+            if (posts.length === 0) {
+                grid.innerHTML = '';
+                empty.style.display = 'block';
+                return;
+            }
+            empty.style.display = 'none';
+
+            grid.innerHTML = posts.map(p => {
+                const author = UserDB.getById(p.userId);
+                const initials = author?.name?.[0]?.toUpperCase() || '?';
+                const isLiked = session && p.likes.includes(session.id);
+                const comments = CommentDB.getByPost(p.id).length;
+                const img = p.photos?.[0]
+                    ? `<img src="${p.photos[0]}" alt="${p.title}" loading="lazy">`
+                    : `<div class="exp-card-img-placeholder">🌍</div>`;
+                const budgetShort = p.budget?.replace(' (Under $50/day)', '')?.replace(' ($50-150/day)', '')?.replace(' ($200+/day)', '') || '';
+
+                return `
+          <article class="exp-card">
+            <a href="experience-detail.html?id=${p.id}" style="text-decoration:none;display:block;">
+              <div class="exp-card-img">
+                ${img}
+                <span class="exp-card-badge">${p.travelStyle}</span>
+              </div>
+              <div class="exp-card-body">
+                <div class="exp-card-dest">📍 ${p.destination}</div>
+                <h3 class="exp-card-title">${p.title}</h3>
+                <p class="exp-card-excerpt">${p.description}</p>
+              </div>
+            </a>
+            <div class="exp-card-body" style="padding-top:0;">
+              <div class="exp-card-meta">
+                <div class="exp-card-author">
+                  <a href="profile.html?id=${p.userId}" style="display:flex;align-items:center;gap:0.5rem;text-decoration:none;">
+                    <div class="exp-card-avatar">${initials}</div>
+                    <span class="exp-card-author-name">${author?.name || 'Unknown'}</span>
+                  </a>
+                </div>
+                <div class="exp-card-stats">
+                  <button class="exp-card-stat like-btn" data-id="${p.id}" style="background:none;border:none;cursor:pointer;${isLiked ? 'color:var(--danger);' : ''}">
+                    ${isLiked ? '❤️' : '🤍'} ${p.likes.length}
+                  </button>
+                  <span class="exp-card-stat">💬 ${comments}</span>
+                </div>
+              </div>
+            </div>
+          </article>`;
+            }).join('');
+
+            // Like buttons
+            document.querySelectorAll('.like-btn').forEach(btn => {
+                btn.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    if (!session) { window.location.href = 'login.html'; return; }
+                    const pid = this.dataset.id;
+                    const liked = PostDB.toggleLike(pid, session.id);
+                    applyFilters(); // re-render
+                    showToast(liked ? 'Added to your liked posts ❤️' : 'Removed from liked posts', liked ? 'success' : 'info');
+                });
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            applyFilters();
+        });
+    </script>
+</body>
+
+</html>

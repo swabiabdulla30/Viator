@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Share Experience – VIATOR</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="nav-logo"><svg class="nav-logo-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 4L12 20L20 4H16.5L12 14L7.5 4H4Z" fill="currentColor"/><path d="M12 8L11 11H13L12 8Z" fill="white"/></svg> VIATOR<span></span></a>
+            <div class="nav-links" id="nav-links"></div>
+            <div class="nav-actions" id="nav-actions"></div>
+            <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+        </div>
+    </nav>
+
+    <main class="page-content">
+        <div class="container" style="max-width:760px;">
+            <div style="margin-bottom:2rem;">
+                <h1 style="margin-bottom:0.5rem;" id="page-heading">✏️ Share Your Experience</h1>
+                <p style="color:var(--text-secondary);">Your travel story will be reviewed and published within 24
+                    hours.</p>
+            </div>
+
+            <div id="form-alert"></div>
+
+            <form id="post-form" novalidate>
+                <div style="display:flex;flex-direction:column;gap:1.75rem;">
+
+                    <!-- Basic Info -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 style="margin:0;">📝 Basic Information</h4>
+                        </div>
+                        <div class="card-body" style="display:flex;flex-direction:column;gap:1.25rem;">
+                            <div class="form-group">
+                                <label class="form-label" for="post-title">Title *</label>
+                                <input class="form-input" id="post-title" type="text"
+                                    placeholder="Give your story a compelling title..." required maxlength="120">
+                                <span class="form-hint" id="title-count">0/120 characters</span>
+                            </div>
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                                <div class="form-group">
+                                    <label class="form-label" for="post-dest">Destination *</label>
+                                    <input class="form-input" id="post-dest" type="text"
+                                        placeholder="City, Region, Country" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="post-country">Country</label>
+                                    <input class="form-input" id="post-country" type="text" placeholder="Country">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Photos -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 style="margin:0;">📸 Photos</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="photo-upload-area" id="upload-area"
+                                onclick="document.getElementById('photo-input').click()">
+                                <div class="photo-upload-icon">📷</div>
+                                <p style="color:var(--text-secondary);margin:0 0 0.5rem;">Click to upload photos</p>
+                                <p style="font-size:0.8rem;color:var(--text-muted);margin:0;">PNG, JPG, WEBP — Max 5
+                                    photos</p>
+                            </div>
+                            <input type="file" id="photo-input" multiple accept="image/*" style="display:none;">
+                            <div class="photo-preview-grid" id="photo-preview"></div>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 style="margin:0;">📖 Your Story *</h4>
+                        </div>
+                        <div class="card-body">
+                            <textarea class="form-input form-textarea" id="post-desc"
+                                placeholder="Tell us about your experience. Be specific — what did you see? How did it feel? What would you do differently?"
+                                style="min-height:200px;" required></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Style & Budget -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 style="margin:0;">🏷️ Travel Style & Budget</h4>
+                        </div>
+                        <div class="card-body flex flex-col" style="gap:1.5rem;">
+                            <div class="form-group">
+                                <label class="form-label">Travel Style *</label>
+                                <div class="filter-chips" id="style-chips">
+                                    <div class="filter-chip style-chip" data-val="Adventure">🏔️ Adventure</div>
+                                    <div class="filter-chip style-chip" data-val="Cultural">🏛️ Cultural</div>
+                                    <div class="filter-chip style-chip" data-val="Budget">🎒 Budget</div>
+                                    <div class="filter-chip style-chip" data-val="Luxury">💎 Luxury</div>
+                                    <div class="filter-chip style-chip" data-val="Solo">🧍 Solo</div>
+                                    <div class="filter-chip style-chip" data-val="Family">👨‍👩‍👧 Family</div>
+                                    <div class="filter-chip style-chip" data-val="Romance">💑 Romance</div>
+                                    <div class="filter-chip style-chip" data-val="Road Trip">🚗 Road Trip</div>
+                                </div>
+                                <input type="hidden" id="post-style">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Daily Budget *</label>
+                                <div class="filter-chips" id="budget-chips">
+                                    <div class="filter-chip budget-chip" data-val="Budget (Under $50/day)">🪙 Budget
+                                        (&lt;$50)</div>
+                                    <div class="filter-chip budget-chip" data-val="Mid-range ($50-150/day)">💳 Mid-range
+                                        ($50-150)</div>
+                                    <div class="filter-chip budget-chip" data-val="Luxury ($200+/day)">💎 Luxury ($200+)
+                                    </div>
+                                </div>
+                                <input type="hidden" id="post-budget">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Tags</label>
+                                <input class="form-input" id="post-tags" type="text"
+                                    placeholder="e.g. Hiking, Street Food, Solo, Beach (comma-separated)">
+                                <span class="form-hint">Separate tags with commas</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tips & Lessons -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 style="margin:0;">💡 Tips & Lessons</h4>
+                        </div>
+                        <div class="card-body" style="display:flex;flex-direction:column;gap:1.25rem;">
+                            <div class="form-group">
+                                <label class="form-label">💡 Practical Tips</label>
+                                <textarea class="form-input form-textarea" id="post-tips"
+                                    placeholder="Specific advice for other travelers — bookings, local customs, what to avoid, money-saving hacks..."
+                                    style="min-height:110px;"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">🎓 Lessons Learned</label>
+                                <textarea class="form-input form-textarea" id="post-lessons"
+                                    placeholder="What would you do differently? What surprised you? What do you wish you knew before going?"
+                                    style="min-height:110px;"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit -->
+                    <div style="display:flex;gap:1rem;justify-content:flex-end;">
+                        <a href="feed.html" class="btn btn-ghost">Cancel</a>
+                        <button type="submit" class="btn btn-primary btn-lg" id="submit-btn">
+                            🚀 Submit for Review
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <div id="toast-container" class="toast-container"></div>
+    <script src="js/data.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        if (!requireAuth()) throw new Error('Auth required');
+
+        const editId = new URLSearchParams(window.location.search).get('edit');
+        let photoDataURLs = [];
+        let existingPost = null;
+
+        if (editId) {
+            existingPost = PostDB.getById(editId);
+            if (!existingPost) { window.location.href = 'feed.html'; }
+            const session = SessionDB.get();
+            if (existingPost.userId !== session.id && session.role !== 'admin') { window.location.href = 'feed.html'; }
+            document.getElementById('page-heading').textContent = '✏️ Edit Experience';
+            document.getElementById('submit-btn').textContent = '💾 Save Changes';
+        }
+
+        // Style Chips
+        document.querySelectorAll('.style-chip').forEach(chip => {
+            chip.addEventListener('click', function () {
+                document.querySelectorAll('.style-chip').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById('post-style').value = this.dataset.val;
+            });
+        });
+        // Budget Chips
+        document.querySelectorAll('.budget-chip').forEach(chip => {
+            chip.addEventListener('click', function () {
+                document.querySelectorAll('.budget-chip').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById('post-budget').value = this.dataset.val;
+            });
+        });
+
+        // Title counter
+        document.getElementById('post-title').addEventListener('input', function () {
+            document.getElementById('title-count').textContent = `${this.value.length}/120 characters`;
+        });
+
+        // Photo upload
+        document.getElementById('photo-input').addEventListener('change', async function () {
+            const files = Array.from(this.files).slice(0, 5);
+            photoDataURLs = [];
+            for (const f of files) {
+                const b64 = await readFileAsBase64(f);
+                photoDataURLs.push(b64);
+            }
+            renderPhotoPreviews();
+        });
+
+        // Drag & drop
+        const uploadArea = document.getElementById('upload-area');
+        uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('dragover'); });
+        uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+        uploadArea.addEventListener('drop', async e => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/')).slice(0, 5);
+            photoDataURLs = [];
+            for (const f of files) photoDataURLs.push(await readFileAsBase64(f));
+            renderPhotoPreviews();
+        });
+
+        function renderPhotoPreviews() {
+            const grid = document.getElementById('photo-preview');
+            grid.innerHTML = photoDataURLs.map((src, i) => `
+        <div class="photo-preview-item">
+          <img src="${src}" alt="Photo ${i + 1}">
+          <button class="photo-preview-remove" onclick="removePhoto(${i})">✕</button>
+        </div>`).join('');
+        }
+
+        function removePhoto(idx) {
+            photoDataURLs.splice(idx, 1);
+            renderPhotoPreviews();
+        }
+
+        // Pre-fill for edit
+        if (existingPost) {
+            document.getElementById('post-title').value = existingPost.title;
+            document.getElementById('post-dest').value = existingPost.destination;
+            document.getElementById('post-country').value = existingPost.country || '';
+            document.getElementById('post-desc').value = existingPost.description;
+            document.getElementById('post-tips').value = existingPost.tips || '';
+            document.getElementById('post-lessons').value = existingPost.lessons || '';
+            document.getElementById('post-tags').value = (existingPost.tags || []).join(', ');
+            document.getElementById('post-style').value = existingPost.travelStyle || '';
+            document.getElementById('post-budget').value = existingPost.budget || '';
+            photoDataURLs = existingPost.photos || [];
+            renderPhotoPreviews();
+            document.querySelectorAll('.style-chip').forEach(c => {
+                if (c.dataset.val === existingPost.travelStyle) c.classList.add('active');
+            });
+            document.querySelectorAll('.budget-chip').forEach(c => {
+                if (c.dataset.val === existingPost.budget) c.classList.add('active');
+            });
+        }
+
+        // Submit
+        document.getElementById('post-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const title = document.getElementById('post-title').value.trim();
+            const dest = document.getElementById('post-dest').value.trim();
+            const description = document.getElementById('post-desc').value.trim();
+            const travelStyle = document.getElementById('post-style').value;
+            const budget = document.getElementById('post-budget').value;
+            const country = document.getElementById('post-country').value.trim();
+            const tips = document.getElementById('post-tips').value.trim();
+            const lessons = document.getElementById('post-lessons').value.trim();
+            const tags = document.getElementById('post-tags').value.split(',').map(t => t.trim()).filter(Boolean);
+            const alertEl = document.getElementById('form-alert');
+
+            if (!title || !dest || !description || !travelStyle || !budget) {
+                alertEl.innerHTML = '<div class="alert alert-error">⚠️ Please fill in all required fields and select a travel style and budget.</div>';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+            }
+
+            const btn = document.getElementById('submit-btn');
+            btn.disabled = true;
+            btn.innerHTML = '<div class="spinner"></div> Submitting...';
+
+            setTimeout(() => {
+                const session = SessionDB.get();
+                const data = { title, destination: dest, country, description, photos: photoDataURLs, travelStyle, budget, tags, tips, lessons, userId: session.id };
+
+                if (editId && existingPost) {
+                    PostDB.update(editId, data);
+                    showToast('Experience updated! ✅', 'success');
+                } else {
+                    PostDB.create(data);
+                    showToast('Story submitted for review! 🚀', 'success');
+                }
+                setTimeout(() => window.location.href = `profile.html?id=${session.id}`, 1000);
+            }, 700);
+        });
+    </script>
+</body>
+
+</html>

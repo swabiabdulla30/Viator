@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile – VIATOR</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .profile-posts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="index.html" class="nav-logo"><svg class="nav-logo-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 4L12 20L20 4H16.5L12 14L7.5 4H4Z" fill="currentColor"/><path d="M12 8L11 11H13L12 8Z" fill="white"/></svg> VIATOR<span></span></a>
+      <div class="nav-links" id="nav-links"></div>
+      <div class="nav-actions" id="nav-actions"></div>
+      <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+    </div>
+  </nav>
+
+  <main class="page-content">
+    <div class="container" style="max-width:900px;">
+      <div id="profile-content"></div>
+    </div>
+  </main>
+
+  <!-- Edit Profile Modal -->
+  <div class="modal-overlay" id="edit-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">✏️ Edit Profile</h3>
+        <button class="modal-close" onclick="closeModal()">✕</button>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:1.25rem;">
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input class="form-input" id="edit-name" type="text">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Bio</label>
+          <textarea class="form-input form-textarea" id="edit-bio"
+            placeholder="Tell the world about your travel style..." style="min-height:90px;"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Profile Photo</label>
+          <div style="display:flex;align-items:center;gap:1rem;">
+            <div id="edit-avatar-preview"
+              style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:700;color:#0a1628;overflow:hidden;">
+            </div>
+            <button class="btn btn-ghost btn-sm" onclick="document.getElementById('avatar-input').click()">📷 Upload
+              Photo</button>
+            <input type="file" id="avatar-input" accept="image/*" style="display:none;">
+          </div>
+        </div>
+      </div>
+      <div class="flex-stack-mobile" style="display:flex;gap:1rem;justify-content:flex-end;margin-top:2rem;">
+        <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveProfile()">💾 Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container" class="toast-container"></div>    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/effects.js"></script>
+    <script>
+    const profileId = new URLSearchParams(window.location.search).get('id');
+    const session = SessionDB.get();
+    let newAvatarData = null;
+    let viewingUser = null;
+
+    function closeModal() { document.getElementById('edit-modal').classList.remove('open'); }
+
+    function render() {
+      const uid = profileId || session?.id;
+      if (!uid) { window.location.href = 'login.html'; return; }
+      viewingUser = UserDB.getById(uid);
+      if (!viewingUser) {
+        document.getElementById('profile-content').innerHTML = '<div class="empty-state"><div class="empty-icon">👤</div><h3 class="empty-title">User not found</h3></div>';
+        return;
+      }
+      const isOwnProfile = session?.id === viewingUser.id;
+      const posts = PostDB.getByUser(uid).filter(p => p.status === 'approved');
+      const totalLikes = posts.reduce((sum, p) => sum + p.likes.length, 0);
+      const initials = viewingUser.name?.[0]?.toUpperCase() || '?';
+      const avatarEl = viewingUser.avatar
+        ? `<img src="${viewingUser.avatar}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`
+        : initials;
+      document.title = `${viewingUser.name} – VIATOR`;
+
+      document.getElementById('profile-content').innerHTML = `
+        <!-- Banner -->
+        <div class="card" style="margin-bottom:1.5rem;overflow:hidden;">
+          <div style="height:160px;background:linear-gradient(135deg,rgba(0,242,254,0.15),rgba(157,78,221,0.1));position:relative;">
+            <div style="position:absolute;inset:0;background:url('assets/hero.png') center/cover;opacity:0.15;"></div>
+          </div>
+          <div style="padding:0 2rem 1.5rem;position:relative;">
+            <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-top:-50px;flex-wrap:wrap;gap:1rem;">
+              <div style="width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--accent));border:4px solid var(--bg-primary);display:flex;align-items:center;justify-content:center;font-family:var(--font-head);font-size:2.5rem;font-weight:800;color:#0a1628;overflow:hidden;flex-shrink:0;">
+                ${avatarEl}
+              </div>
+              ${isOwnProfile ? `<button class="btn btn-ghost btn-sm" onclick="openEditModal()">✏️ Edit Profile</button>` : ''}
+            </div>
+            <div style="margin-top:1rem;">
+              <h1 style="font-size:1.6rem;margin-bottom:0.25rem;">${viewingUser.name}</h1>
+              <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:0.75rem;">📅 Joined ${formatDate(viewingUser.joinedAt)}</p>
+              ${viewingUser.bio ? `<p style="color:var(--text-secondary);">${viewingUser.bio}</p>` : '<p style="color:var(--text-muted);font-style:italic;">No bio yet.</p>'}
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="grid-3" style="margin-bottom:2rem;">
+          <div class="stat-card teal">
+            <div class="stat-icon">📝</div>
+            <div class="stat-value">${posts.length}</div>
+            <div class="stat-label">Stories Shared</div>
+          </div>
+          <div class="stat-card amber">
+            <div class="stat-icon">❤️</div>
+            <div class="stat-value">${totalLikes}</div>
+            <div class="stat-label">Likes Received</div>
+          </div>
+          <div class="stat-card purple">
+            <div class="stat-icon">🔖</div>
+            <div class="stat-value">${(viewingUser.bookmarks || []).length}</div>
+            <div class="stat-label">Bookmarks</div>
+          </div>
+        </div>
+
+        <!-- Posts -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;">
+          <h2 style="font-size:1.25rem;margin:0;">🌍 Travel Stories</h2>
+          ${isOwnProfile ? `<a href="create-post.html" class="btn btn-primary btn-sm">+ Share New Story</a>` : ''}
+        </div>
+        ${posts.length === 0
+          ? `<div class="empty-state" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);">
+              <div class="empty-icon">✈️</div>
+              <h3 class="empty-title">No stories yet</h3>
+              <p class="empty-desc">${isOwnProfile ? 'Share your first travel experience!' : 'This traveler hasn\'t shared any stories yet.'}</p>
+              ${isOwnProfile ? '<a href="create-post.html" class="btn btn-primary">Share Your First Story</a>' : ''}
+            </div>`
+          : `<div class="profile-posts-grid" id="user-posts-grid">
+              ${posts.map(p => {
+            const img = p.photos?.[0] ? `<img src="${p.photos[0]}" alt="${p.title}" loading="lazy">` : `<div class="exp-card-img-placeholder">🌍</div>`;
+            return `
+                  <article class="exp-card">
+                    <a href="experience-detail.html?id=${p.id}" style="text-decoration:none;display:block;">
+                      <div class="exp-card-img">${img}<span class="exp-card-badge">${p.travelStyle}</span></div>
+                      <div class="exp-card-body">
+                        <div class="exp-card-dest">📍 ${p.destination}</div>
+                        <h3 class="exp-card-title">${p.title}</h3>
+                        <div class="exp-card-meta" style="margin-top:0.75rem;padding-top:0.75rem;border-top:1px solid var(--border);">
+                          <div class="exp-card-stats">
+                            <span class="exp-card-stat">❤️ ${p.likes.length}</span>
+                            <span class="exp-card-stat">💬 ${CommentDB.getByPost(p.id).length}</span>
+                          </div>
+                          <span style="font-size:0.75rem;color:var(--text-muted);">${timeAgo(p.createdAt)}</span>
+                        </div>
+                      </div>
+                    </a>
+                    ${isOwnProfile ? `
+                    <div class="card-footer" style="display:flex;gap:0.5rem;">
+                      <a href="create-post.html?edit=${p.id}" class="btn btn-ghost btn-sm">✏️ Edit</a>
+                      <button class="btn btn-danger btn-sm" onclick="deletePost('${p.id}')">🗑️</button>
+                    </div>` : ''}
+                  </article>`;
+          }).join('')}
+            </div>`
+        }
+
+        <!-- Pending Posts (only own profile) -->
+        ${isOwnProfile ? (() => {
+          const pending = PostDB.getByUser(uid).filter(p => p.status !== 'approved');
+          if (!pending.length) return '';
+          return `<div style="margin-top:2rem;">
+            <h3 style="font-size:1.05rem;margin-bottom:1rem;color:var(--accent);">⏳ Pending Review (${pending.length})</h3>
+            <div style="display:flex;flex-direction:column;gap:0.75rem;">
+              ${pending.map(p => `
+                <div style="padding:1rem 1.25rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;">
+                  <div>
+                    <div style="font-weight:600;">${p.title}</div>
+                    <span class="badge badge-${p.status === 'pending' ? 'warning' : 'danger'}">${p.status}</span>
+                  </div>
+                  <div style="display:flex;gap:0.5rem;">
+                    <a href="create-post.html?edit=${p.id}" class="btn btn-ghost btn-sm">✏️ Edit</a>
+                    <button class="btn btn-danger btn-sm" onclick="deletePost('${p.id}')">🗑️</button>
+                  </div>
+                </div>`).join('')}
+            </div>
+          </div>`;
+        })() : ''}`;
+    }
+
+    function deletePost(postId) {
+      confirmAction('Delete this post permanently?', () => {
+        PostDB.delete(postId);
+        showToast('Post deleted.', 'info');
+        render();
+      });
+    }
+
+    function openEditModal() {
+      document.getElementById('edit-name').value = viewingUser.name || '';
+      document.getElementById('edit-bio').value = viewingUser.bio || '';
+      const preview = document.getElementById('edit-avatar-preview');
+      preview.innerHTML = viewingUser.avatar ? `<img src="${viewingUser.avatar}" style="width:56px;height:56px;object-fit:cover;border-radius:50%;">` : (viewingUser.name?.[0]?.toUpperCase() || '?');
+      document.getElementById('edit-modal').classList.add('open');
+
+      document.getElementById('avatar-input').addEventListener('change', async function () {
+        const file = this.files[0]; if (!file) return;
+        newAvatarData = await readFileAsBase64(file);
+        preview.innerHTML = `<img src="${newAvatarData}" style="width:56px;height:56px;object-fit:cover;border-radius:50%;">`;
+      }, { once: true });
+    }
+
+    function saveProfile() {
+      const name = document.getElementById('edit-name').value.trim();
+      const bio = document.getElementById('edit-bio').value.trim();
+      if (!name) { showToast('Name cannot be empty.', 'warning'); return; }
+      const updates = { name, bio };
+      if (newAvatarData) updates.avatar = newAvatarData;
+      const updated = UserDB.update(session.id, updates);
+      SessionDB.set(updated);
+      closeModal();
+      showToast('Profile updated! ✅', 'success');
+      newAvatarData = null;
+      render();
+      initNavbar(); // refresh nav avatar
+    }
+
+    document.addEventListener('DOMContentLoaded', render);
+  </script>
+</body>
+
+</html>

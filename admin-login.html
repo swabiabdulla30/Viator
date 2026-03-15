@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login – VIATOR</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem;">
+        <div style="width:100%;max-width:420px;">
+            <div style="text-align:center;margin-bottom:2.5rem;">
+                <div style="font-size:3rem;margin-bottom:0.75rem;">🛡️</div>
+                <h1 style="font-size:2rem;margin-bottom:0.5rem;">Admin Portal</h1>
+                <p style="color:var(--text-secondary);">VIATOR Content Management</p>
+            </div>
+            <div class="auth-card">
+                <div id="form-alert"></div>
+                <form id="admin-login-form" novalidate>
+                    <div style="display:flex;flex-direction:column;gap:1.25rem;">
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <div class="form-input-wrap">
+                                <span class="form-input-icon">✉️</span>
+                                <input class="form-input" id="admin-email" type="email" value="admin@viator.com"
+                                    required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Password</label>
+                            <div class="form-input-wrap">
+                                <span class="form-input-icon">🔒</span>
+                                <input class="form-input" id="admin-password" type="password" value="Admin@123"
+                                    required>
+                                <button type="button" class="toggle-pw" id="toggle-pw">👁️</button>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="admin-login-btn"
+                            style="width:100%;justify-content:center;padding:0.875rem;">
+                            🛡️ Sign In as Admin
+                        </button>
+                    </div>
+                </form>
+                <div style="margin-top:1.5rem;text-align:center;">
+                    <a href="login.html" style="font-size:0.85rem;color:var(--text-muted);">← Back to user login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container" class="toast-container"></div>
+    <script src="js/data.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        if (SessionDB.isLoggedIn() && SessionDB.isAdmin()) window.location.href = 'admin-dashboard.html';
+
+        document.getElementById('toggle-pw').addEventListener('click', function () {
+            const pw = document.getElementById('admin-password');
+            const isText = pw.type === 'text';
+            pw.type = isText ? 'password' : 'text';
+            this.textContent = isText ? '👁️' : '🙈';
+        });
+
+        document.getElementById('admin-login-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const email = document.getElementById('admin-email').value.trim();
+            const password = document.getElementById('admin-password').value;
+            const btn = document.getElementById('admin-login-btn');
+            btn.disabled = true;
+            btn.innerHTML = '<div class="spinner"></div> Signing in...';
+
+            setTimeout(() => {
+                const result = login({ email, password });
+                if (result.success && result.user.role === 'admin') {
+                    showToast('Welcome, Admin! 🛡️', 'success');
+                    setTimeout(() => window.location.href = 'admin-dashboard.html', 800);
+                } else {
+                    document.getElementById('form-alert').innerHTML = `<div class="alert alert-error">⚠️ ${result.success ? 'Access denied. Not an admin account.' : result.error}</div>`;
+                    btn.disabled = false;
+                    btn.innerHTML = '🛡️ Sign In as Admin';
+                }
+            }, 600);
+        });
+    </script>
+</body>
+
+</html>

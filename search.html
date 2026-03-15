@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Experiences – VIATOR</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .results-layout {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .results-sidebar {
+            position: sticky;
+            top: calc(var(--nav-height) + 2rem);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        @media(max-width:900px) {
+            .results-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .results-sidebar {
+                position: static;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="nav-logo"><svg class="nav-logo-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 4L12 20L20 4H16.5L12 14L7.5 4H4Z" fill="currentColor"/><path d="M12 8L11 11H13L12 8Z" fill="white"/></svg> VIATOR<span></span></a>
+            <div class="nav-links" id="nav-links"></div>
+            <div class="nav-actions" id="nav-actions"></div>
+            <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+        </div>
+    </nav>
+
+    <main class="page-content">
+        <div class="container">
+            <!-- Hero Search -->
+            <div style="text-align:center;margin-bottom:3rem; padding: 0 1rem;">
+                <h1 style="margin-bottom:0.75rem;">🔍 Explore Travel Experiences</h1>
+                <p style="color:var(--text-secondary);margin-bottom:1.5rem;">Search by destination, topic, or traveler name</p>
+                <div class="search-bar" style="max-width:620px;margin:0 auto; width: 100%;">
+                    <input type="text" id="search-input" placeholder="Kyoto, Vietnam, solo travel, budget tips..." autofocus>
+                    <button class="search-bar-btn" onclick="runSearch()">Search</button>
+                </div>
+            </div>
+
+            <div class="results-layout">
+                <!-- Sidebar -->
+                <aside class="results-sidebar">
+                    <div class="filter-panel">
+                        <div class="filter-title">🔧 Refine Results</div>
+                        <div class="filter-group">
+                            <div class="filter-group-label">Travel Style</div>
+                            <div class="filter-chips">
+                                <div class="filter-chip s-chip active" data-val="">All</div>
+                                <div class="filter-chip s-chip" data-val="Adventure">🏔️ Adventure</div>
+                                <div class="filter-chip s-chip" data-val="Cultural">🏛️ Cultural</div>
+                                <div class="filter-chip s-chip" data-val="Budget">🎒 Budget</div>
+                                <div class="filter-chip s-chip" data-val="Luxury">💎 Luxury</div>
+                                <div class="filter-chip s-chip" data-val="Solo">🧍 Solo</div>
+                                <div class="filter-chip s-chip" data-val="Family">👨‍👩‍👧 Family</div>
+                            </div>
+                        </div>
+                        <div class="filter-group">
+                            <div class="filter-group-label">Budget</div>
+                            <div class="filter-chips">
+                                <div class="filter-chip b-chip active" data-val="">All</div>
+                                <div class="filter-chip b-chip" data-val="Budget (Under $50/day)">Budget</div>
+                                <div class="filter-chip b-chip" data-val="Mid-range ($50-150/day)">Mid-range</div>
+                                <div class="filter-chip b-chip" data-val="Luxury ($200+/day)">Luxury</div>
+                            </div>
+                        </div>
+
+                        <div class="filter-group">
+                            <div class="filter-group-label">Sort By</div>
+                            <select class="form-input form-select" id="s-sort" onchange="runSearch()">
+                                <option value="latest">Latest First</option>
+                                <option value="popular">Most Liked</option>
+                                <option value="comments">Most Discussed</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" style="width:100%;justify-content:center;"
+                            onclick="runSearch()">Apply</button>
+                        <div class="filter-clear" onclick="clearAll()">✕ Clear all</div>
+                    </div>
+                </aside>
+
+                <!-- Results -->
+                <div>
+                    <div id="results-status" style="color:var(--text-muted);font-size:0.875rem;margin-bottom:1rem;">
+                    </div>
+                    <div class="results-grid" id="results-grid"></div>
+                    <div id="results-empty" class="empty-state" style="display:none;">
+                        <div class="empty-icon">🔍</div>
+                        <h3 class="empty-title">No results found</h3>
+                        <p class="empty-desc">Try different keywords or broaden your filters.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="toast-container" class="toast-container">    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/effects.js"></script>
+    <script>
+        let styleFilter = '', budgetFilter = '';
+
+        document.querySelectorAll('.s-chip').forEach(c => c.addEventListener('click', function () {
+            document.querySelectorAll('.s-chip').forEach(x => x.classList.remove('active'));
+            this.classList.add('active'); styleFilter = this.dataset.val; runSearch();
+        }));
+        document.querySelectorAll('.b-chip').forEach(c => c.addEventListener('click', function () {
+            document.querySelectorAll('.b-chip').forEach(x => x.classList.remove('active'));
+            this.classList.add('active'); budgetFilter = this.dataset.val; runSearch();
+        }));
+        document.getElementById('search-input').addEventListener('keydown', e => { if (e.key === 'Enter') runSearch(); });
+
+
+        function runSearch() {
+            const q = document.getElementById('search-input').value.trim();
+            const filters = {
+                travelStyle: styleFilter,
+                budget: budgetFilter,
+                sort: document.getElementById('s-sort').value,
+            };
+            const results = PostDB.search(q, filters);
+            renderResults(results, q);
+        }
+
+        function highlight(text, query) {
+            if (!query) return text;
+            const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            return text.replace(new RegExp(`(${escaped})`, 'gi'), '<mark style="background:rgba(0,242,254,0.25);color:var(--primary);border-radius:2px;">$1</mark>');
+        }
+
+        function renderResults(posts, q) {
+            const grid = document.getElementById('results-grid');
+            const empty = document.getElementById('results-empty');
+            const status = document.getElementById('results-status');
+            const session = SessionDB.get();
+            status.textContent = `${posts.length} result${posts.length !== 1 ? 's' : ''} found`;
+            if (posts.length === 0) { grid.innerHTML = ''; empty.style.display = 'block'; return; }
+            empty.style.display = 'none';
+
+            grid.innerHTML = posts.map(p => {
+                const author = UserDB.getById(p.userId);
+                const initials = author?.name?.[0]?.toUpperCase() || '?';
+                const isLiked = session && p.likes.includes(session.id);
+                const img = p.photos?.[0] ? `<img src="${p.photos[0]}" alt="${p.title}" loading="lazy">` : `<div class="exp-card-img-placeholder">🌍</div>`;
+                const titleHL = highlight(p.title, q);
+                const destHL = highlight(p.destination, q);
+                return `
+          <article class="exp-card">
+            <a href="experience-detail.html?id=${p.id}" style="text-decoration:none;display:block;">
+              <div class="exp-card-img">${img}<span class="exp-card-badge">${p.travelStyle}</span></div>
+              <div class="exp-card-body">
+                <div class="exp-card-dest">📍 ${destHL}</div>
+                <h3 class="exp-card-title">${titleHL}</h3>
+                <p class="exp-card-excerpt">${p.description}</p>
+              </div>
+            </a>
+            <div class="exp-card-body" style="padding-top:0;">
+              <div class="exp-card-meta">
+                <a href="profile.html?id=${p.userId}" style="display:flex;align-items:center;gap:0.5rem;text-decoration:none;">
+                  <div class="exp-card-avatar">${highlight(initials, '')}</div>
+                  <span class="exp-card-author-name">${highlight(author?.name || 'Unknown', q)}</span>
+                </a>
+                <div class="exp-card-stats">
+                  <span class="exp-card-stat" style="${isLiked ? 'color:var(--danger);' : ''}">❤️ ${p.likes.length}</span>
+                </div>
+              </div>
+            </div>
+          </article>`;
+            }).join('');
+        }
+
+        function clearAll() {
+            document.getElementById('search-input').value = '';
+            document.getElementById('s-sort').value = 'latest';
+            styleFilter = ''; budgetFilter = '';
+            document.querySelectorAll('.s-chip,.b-chip').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.s-chip[data-val=""],.b-chip[data-val=""]').forEach(c => c.classList.add('active'));
+            runSearch();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const q = new URLSearchParams(window.location.search).get('q');
+            if (q) document.getElementById('search-input').value = q;
+            runSearch();
+        });
+    </script>
+</body>
+
+</html>

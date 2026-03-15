@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Posts – VIATOR Admin</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <div class="admin-sidebar-logo"><a href="admin-dashboard.html"><img src="assets/logo_editorial_transparent.png" alt="Viator Logo"> VIATOR <span>Admin</span></a></div>
+            <nav class="admin-nav">
+                <div class="admin-nav-label">Overview</div>
+                <a class="admin-nav-item" href="admin-dashboard.html"><span class="nav-icon">??</span> Dashboard</a>
+                <div class="admin-nav-label" style="margin-top:1rem;">Content</div>
+                <a class="admin-nav-item active" href="admin-posts.html"><span class="nav-icon">??</span> Posts <span
+                        class="admin-nav-badge" id="sb-pending">0</span></a>
+                <a class="admin-nav-item" href="admin-users.html"><span class="nav-icon">??</span> Users</a>
+                <a class="admin-nav-item" href="admin-reports.html"><span class="nav-icon">??</span> Reports</a>
+                <div class="admin-nav-label" style="margin-top:1rem;">Account</div>
+                <a class="admin-nav-item" href="index.html" target="_blank"><span class="nav-icon">??</span> View
+                    Site</a>
+                <button class="admin-nav-item" style="width:100%;text-align:left;" onclick="logout()"><span
+                        class="nav-icon">??</span> Log Out</button>
+            </nav>
+        </aside>
+
+        <main class="admin-main">
+            <div class="admin-topbar">
+                <div class="admin-page-title">?? Post Moderation</div>
+                <div class="search-bar" style="max-width:300px;">
+                    <input type="text" id="post-search" placeholder="Search posts..." oninput="renderPosts()">
+                    <button class="search-bar-btn" onclick="renderPosts()">Go</button>
+                </div>
+            </div>
+
+            <div style="display:flex;gap:0.5rem;margin-bottom:1.5rem;">
+                <button class="tab-btn active" data-s="all" onclick="setStatus(this)">All</button>
+                <button class="tab-btn" data-s="pending" onclick="setStatus(this)">? Pending</button>
+                <button class="tab-btn" data-s="approved" onclick="setStatus(this)">? Approved</button>
+                <button class="tab-btn" data-s="rejected" onclick="setStatus(this)">? Rejected</button>
+            </div>
+
+            <div class="table-wrap">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>Style</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="posts-tbody"></tbody>
+                </table>
+            </div>
+            <div id="posts-empty" class="empty-state" style="display:none;">
+                <div class="empty-icon">??</div>
+                <h3 class="empty-title">No posts found</h3>
+            </div>
+        </main>
+    </div>
+
+    <div id="toast-container" class="toast-container"></div>
+    <script src="js/data.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        if (!requireAdmin()) throw new Error();
+        let filterStatus = 'all';
+
+        function setStatus(btn) {
+            document.querySelectorAll('[data-s]').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            filterStatus = btn.dataset.s;
+            renderPosts();
+        }
+
+        function renderPosts() {
+            const q = document.getElementById('post-search').value.trim().toLowerCase();
+            let posts = PostDB.getAll();
+            if (filterStatus !== 'all') posts = posts.filter(p => p.status === filterStatus);
+            if (q) posts = posts.filter(p => p.title.toLowerCase().includes(q) || p.destination.toLowerCase().includes(q));
+            posts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+            const pending = PostDB.getPending().length;
+            document.getElementById('sb-pending').textContent = pending;
+
+            const tbody = document.getElementById('posts-tbody');
+            const empty = document.getElementById('posts-empty');
+            if (posts.length === 0) { tbody.innerHTML = ''; empty.style.display = 'flex'; return; }
+            empty.style.display = 'none';
+
+            tbody.innerHTML = posts.map(p => {
+                const author = UserDB.getById(p.userId);
+                const bc = p.status === 'approved' ? 'badge-success' : p.status === 'pending' ? 'badge-warning' : 'badge-danger';
+                return `<tr>
+        <td>
+          <a href="experience-detail.html?id=${p.id}" target="_blank" style="color:var(--text-primary);font-weight:600;font-size:0.85rem;">
+            ${p.title.substring(0, 55)}${p.title.length > 55 ? '…' : ''}
+          </a>
+          <div style="font-size:0.75rem;color:var(--text-muted);">?? ${p.destination}</div>
+        </td>
+        <td style="font-size:0.85rem;color:var(--text-secondary);">${author?.name || '-'}</td>
+        <td><span class="badge badge-muted" style="font-size:0.72rem;">${p.travelStyle || '-'}</span></td>
+        <td style="font-size:0.8rem;color:var(--text-muted);">${timeAgo(p.createdAt)}</td>
+        <td><span class="badge ${bc}">${p.status}</span></td>
+        <td>
+          <div class="table-actions">
+            ${p.status !== 'approved' ? `<button class="btn btn-primary btn-sm" onclick="approvePost('${p.id}')">?</button>` : ''}
+            ${p.status !== 'rejected' ? `<button class="btn btn-ghost btn-sm" onclick="rejectPost('${p.id}')">?</button>` : ''}
+            <button class="btn btn-danger btn-sm" onclick="deletePost('${p.id}')">???</button>
+          </div>
+        </td>
+      </tr>`;
+            }).join('');
+        }
+
+        function approvePost(id) { PostDB.setStatus(id, 'approved'); showToast('Post approved! ?', 'success'); renderPosts(); }
+        function rejectPost(id) { PostDB.setStatus(id, 'rejected'); showToast('Post rejected.', 'info'); renderPosts(); }
+        function deletePost(id) {
+            confirmAction('Permanently delete this post?', () => {
+                PostDB.delete(id); showToast('Post deleted.', 'info'); renderPosts();
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', renderPosts);
+    </script>
+</body>
+
+</html>
