@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Users – VIATOR Admin</title>
+    <title>Users â€“ VIATOR Admin</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 
@@ -30,7 +30,7 @@
         <main class="admin-main">
             <div class="admin-topbar">
                 <div>
-                    <div class="admin-page-title">👥 User Management</div>
+                    <div class="admin-page-title">ðŸ‘¥ User Management</div>
                     <p style="color:var(--text-muted);font-size:0.85rem;margin:0;" id="user-count-label"></p>
                 </div>
                 <div class="search-bar" style="max-width:300px;">
@@ -61,7 +61,7 @@
                 </table>
             </div>
             <div id="users-empty" class="empty-state" style="display:none;">
-                <div class="empty-icon">👤</div>
+                <div class="empty-icon">ðŸ‘¤</div>
                 <h3 class="empty-title">No users found</h3>
             </div>
         </main>
@@ -111,9 +111,9 @@
         <td>
           <div class="table-actions">
             ${u.status === 'active'
-                        ? `<button class="btn btn-danger btn-sm" onclick="banUser('${u.id}')">🚫 Ban</button>`
-                        : `<button class="btn btn-primary btn-sm" onclick="unbanUser('${u.id}')">✅ Unban</button>`}
-            <button class="btn btn-ghost btn-sm" onclick="deleteUser('${u.id}')">🗑️</button>
+                        ? `<button class="btn btn-danger btn-sm" onclick="banUser('${u.id}')">ðŸš« Ban</button>`
+                        : `<button class="btn btn-primary btn-sm" onclick="unbanUser('${u.id}')">âœ… Unban</button>`}
+            <button class="btn btn-ghost btn-sm" onclick="deleteUser('${u.id}')">ðŸ—‘ï¸</button>
           </div>
         </td>
       </tr>`;
@@ -126,7 +126,7 @@
                 showToast('User banned.', 'info'); renderUsers();
             });
         }
-        function unbanUser(id) { UserDB.update(id, { status: 'active' }); showToast('User unbanned. ✅', 'success'); renderUsers(); }
+        function unbanUser(id) { UserDB.update(id, { status: 'active' }); showToast('User unbanned. âœ…', 'success'); renderUsers(); }
         function deleteUser(id) {
             confirmAction('Permanently delete this user and all their posts?', () => {
                 PostDB.getByUser(id).forEach(p => PostDB.delete(p.id));

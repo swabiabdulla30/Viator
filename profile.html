@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Profile – VIATOR</title>
+  <title>Profile â€“ VIATOR</title>
   <link rel="stylesheet" href="css/style.css">
   <style>
     .profile-posts-grid {
@@ -18,7 +18,7 @@
 <body>
   <nav class="navbar">
     <div class="container">
-      <a href="index.html" class="nav-logo"><svg class="nav-logo-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 4L12 20L20 4H16.5L12 14L7.5 4H4Z" fill="currentColor"/><path d="M12 8L11 11H13L12 8Z" fill="white"/></svg> VIATOR<span></span></a>
+      <a href="index.html" class="nav-logo"><img src="assets/logo_editorial_transparent.png" alt="Viator Logo" style="height: 28px; width: auto; margin-right: 8px; vertical-align: middle;"> VIATOR<span></span></a>
       <div class="nav-links" id="nav-links"></div>
       <div class="nav-actions" id="nav-actions"></div>
       <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
@@ -35,8 +35,8 @@
   <div class="modal-overlay" id="edit-modal">
     <div class="modal">
       <div class="modal-header">
-        <h3 class="modal-title">✏️ Edit Profile</h3>
-        <button class="modal-close" onclick="closeModal()">✕</button>
+        <h3 class="modal-title">âœï¸ Edit Profile</h3>
+        <button class="modal-close" onclick="closeModal()">âœ•</button>
       </div>
       <div style="display:flex;flex-direction:column;gap:1.25rem;">
         <div class="form-group">
@@ -54,7 +54,7 @@
             <div id="edit-avatar-preview"
               style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:700;color:#0a1628;overflow:hidden;">
             </div>
-            <button class="btn btn-ghost btn-sm" onclick="document.getElementById('avatar-input').click()">📷 Upload
+            <button class="btn btn-ghost btn-sm" onclick="document.getElementById('avatar-input').click()">ðŸ“· Upload
               Photo</button>
             <input type="file" id="avatar-input" accept="image/*" style="display:none;">
           </div>
@@ -62,7 +62,7 @@
       </div>
       <div class="flex-stack-mobile" style="display:flex;gap:1rem;justify-content:flex-end;margin-top:2rem;">
         <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
-        <button class="btn btn-primary" onclick="saveProfile()">💾 Save Changes</button>
+        <button class="btn btn-primary" onclick="saveProfile()">ðŸ’¾ Save Changes</button>
       </div>
     </div>
   </div>
@@ -86,7 +86,7 @@
       if (!uid) { window.location.href = 'login.html'; return; }
       viewingUser = UserDB.getById(uid);
       if (!viewingUser) {
-        document.getElementById('profile-content').innerHTML = '<div class="empty-state"><div class="empty-icon">👤</div><h3 class="empty-title">User not found</h3></div>';
+        document.getElementById('profile-content').innerHTML = '<div class="empty-state"><div class="empty-icon">ðŸ‘¤</div><h3 class="empty-title">User not found</h3></div>';
         return;
       }
       const isOwnProfile = session?.id === viewingUser.id;
@@ -96,7 +96,7 @@
       const avatarEl = viewingUser.avatar
         ? `<img src="${viewingUser.avatar}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`
         : initials;
-      document.title = `${viewingUser.name} – VIATOR`;
+      document.title = `${viewingUser.name} â€“ VIATOR`;
 
       document.getElementById('profile-content').innerHTML = `
         <!-- Banner -->
@@ -109,11 +109,11 @@
               <div style="width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--accent));border:4px solid var(--bg-primary);display:flex;align-items:center;justify-content:center;font-family:var(--font-head);font-size:2.5rem;font-weight:800;color:#0a1628;overflow:hidden;flex-shrink:0;">
                 ${avatarEl}
               </div>
-              ${isOwnProfile ? `<button class="btn btn-ghost btn-sm" onclick="openEditModal()">✏️ Edit Profile</button>` : ''}
+              ${isOwnProfile ? `<button class="btn btn-ghost btn-sm" onclick="openEditModal()">âœï¸ Edit Profile</button>` : ''}
             </div>
             <div style="margin-top:1rem;">
               <h1 style="font-size:1.6rem;margin-bottom:0.25rem;">${viewingUser.name}</h1>
-              <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:0.75rem;">📅 Joined ${formatDate(viewingUser.joinedAt)}</p>
+              <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:0.75rem;">ðŸ“… Joined ${formatDate(viewingUser.joinedAt)}</p>
               ${viewingUser.bio ? `<p style="color:var(--text-secondary);">${viewingUser.bio}</p>` : '<p style="color:var(--text-muted);font-style:italic;">No bio yet.</p>'}
             </div>
           </div>
@@ -122,17 +122,17 @@
         <!-- Stats -->
         <div class="grid-3" style="margin-bottom:2rem;">
           <div class="stat-card teal">
-            <div class="stat-icon">📝</div>
+            <div class="stat-icon">ðŸ“</div>
             <div class="stat-value">${posts.length}</div>
             <div class="stat-label">Stories Shared</div>
           </div>
           <div class="stat-card amber">
-            <div class="stat-icon">❤️</div>
+            <div class="stat-icon">â¤ï¸</div>
             <div class="stat-value">${totalLikes}</div>
             <div class="stat-label">Likes Received</div>
           </div>
           <div class="stat-card purple">
-            <div class="stat-icon">🔖</div>
+            <div class="stat-icon">ðŸ”–</div>
             <div class="stat-value">${(viewingUser.bookmarks || []).length}</div>
             <div class="stat-label">Bookmarks</div>
           </div>
@@ -140,30 +140,30 @@
 
         <!-- Posts -->
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;">
-          <h2 style="font-size:1.25rem;margin:0;">🌍 Travel Stories</h2>
+          <h2 style="font-size:1.25rem;margin:0;">ðŸŒ Travel Stories</h2>
           ${isOwnProfile ? `<a href="create-post.html" class="btn btn-primary btn-sm">+ Share New Story</a>` : ''}
         </div>
         ${posts.length === 0
           ? `<div class="empty-state" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);">
-              <div class="empty-icon">✈️</div>
+              <div class="empty-icon">âœˆï¸</div>
               <h3 class="empty-title">No stories yet</h3>
               <p class="empty-desc">${isOwnProfile ? 'Share your first travel experience!' : 'This traveler hasn\'t shared any stories yet.'}</p>
               ${isOwnProfile ? '<a href="create-post.html" class="btn btn-primary">Share Your First Story</a>' : ''}
             </div>`
           : `<div class="profile-posts-grid" id="user-posts-grid">
               ${posts.map(p => {
-            const img = p.photos?.[0] ? `<img src="${p.photos[0]}" alt="${p.title}" loading="lazy">` : `<div class="exp-card-img-placeholder">🌍</div>`;
+            const img = p.photos?.[0] ? `<img src="${p.photos[0]}" alt="${p.title}" loading="lazy">` : `<div class="exp-card-img-placeholder">ðŸŒ</div>`;
             return `
                   <article class="exp-card">
                     <a href="experience-detail.html?id=${p.id}" style="text-decoration:none;display:block;">
                       <div class="exp-card-img">${img}<span class="exp-card-badge">${p.travelStyle}</span></div>
                       <div class="exp-card-body">
-                        <div class="exp-card-dest">📍 ${p.destination}</div>
+                        <div class="exp-card-dest">ðŸ“ ${p.destination}</div>
                         <h3 class="exp-card-title">${p.title}</h3>
                         <div class="exp-card-meta" style="margin-top:0.75rem;padding-top:0.75rem;border-top:1px solid var(--border);">
                           <div class="exp-card-stats">
-                            <span class="exp-card-stat">❤️ ${p.likes.length}</span>
-                            <span class="exp-card-stat">💬 ${CommentDB.getByPost(p.id).length}</span>
+                            <span class="exp-card-stat">â¤ï¸ ${p.likes.length}</span>
+                            <span class="exp-card-stat">ðŸ’¬ ${CommentDB.getByPost(p.id).length}</span>
                           </div>
                           <span style="font-size:0.75rem;color:var(--text-muted);">${timeAgo(p.createdAt)}</span>
                         </div>
@@ -171,8 +171,8 @@
                     </a>
                     ${isOwnProfile ? `
                     <div class="card-footer" style="display:flex;gap:0.5rem;">
-                      <a href="create-post.html?edit=${p.id}" class="btn btn-ghost btn-sm">✏️ Edit</a>
-                      <button class="btn btn-danger btn-sm" onclick="deletePost('${p.id}')">🗑️</button>
+                      <a href="create-post.html?edit=${p.id}" class="btn btn-ghost btn-sm">âœï¸ Edit</a>
+                      <button class="btn btn-danger btn-sm" onclick="deletePost('${p.id}')">ðŸ—‘ï¸</button>
                     </div>` : ''}
                   </article>`;
           }).join('')}
@@ -184,7 +184,7 @@
           const pending = PostDB.getByUser(uid).filter(p => p.status !== 'approved');
           if (!pending.length) return '';
           return `<div style="margin-top:2rem;">
-            <h3 style="font-size:1.05rem;margin-bottom:1rem;color:var(--accent);">⏳ Pending Review (${pending.length})</h3>
+            <h3 style="font-size:1.05rem;margin-bottom:1rem;color:var(--accent);">â³ Pending Review (${pending.length})</h3>
             <div style="display:flex;flex-direction:column;gap:0.75rem;">
               ${pending.map(p => `
                 <div style="padding:1rem 1.25rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;">
@@ -193,8 +193,8 @@
                     <span class="badge badge-${p.status === 'pending' ? 'warning' : 'danger'}">${p.status}</span>
                   </div>
                   <div style="display:flex;gap:0.5rem;">
-                    <a href="create-post.html?edit=${p.id}" class="btn btn-ghost btn-sm">✏️ Edit</a>
-                    <button class="btn btn-danger btn-sm" onclick="deletePost('${p.id}')">🗑️</button>
+                    <a href="create-post.html?edit=${p.id}" class="btn btn-ghost btn-sm">âœï¸ Edit</a>
+                    <button class="btn btn-danger btn-sm" onclick="deletePost('${p.id}')">ðŸ—‘ï¸</button>
                   </div>
                 </div>`).join('')}
             </div>
@@ -233,7 +233,7 @@
       const updated = UserDB.update(session.id, updates);
       SessionDB.set(updated);
       closeModal();
-      showToast('Profile updated! ✅', 'success');
+      showToast('Profile updated! âœ…', 'success');
       newAvatarData = null;
       render();
       initNavbar(); // refresh nav avatar

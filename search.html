@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search Experiences – VIATOR</title>
+    <title>Search Experiences â€“ VIATOR</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
         .results-layout {
@@ -40,7 +40,7 @@
 <body>
     <nav class="navbar">
         <div class="container">
-            <a href="index.html" class="nav-logo"><svg class="nav-logo-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 4L12 20L20 4H16.5L12 14L7.5 4H4Z" fill="currentColor"/><path d="M12 8L11 11H13L12 8Z" fill="white"/></svg> VIATOR<span></span></a>
+            <a href="index.html" class="nav-logo"><img src="assets/logo_editorial_transparent.png" alt="Viator Logo" style="height: 28px; width: auto; margin-right: 8px; vertical-align: middle;"> VIATOR<span></span></a>
             <div class="nav-links" id="nav-links"></div>
             <div class="nav-actions" id="nav-actions"></div>
             <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
@@ -51,7 +51,7 @@
         <div class="container">
             <!-- Hero Search -->
             <div style="text-align:center;margin-bottom:3rem; padding: 0 1rem;">
-                <h1 style="margin-bottom:0.75rem;">🔍 Explore Travel Experiences</h1>
+                <h1 style="margin-bottom:0.75rem;">ðŸ” Explore Travel Experiences</h1>
                 <p style="color:var(--text-secondary);margin-bottom:1.5rem;">Search by destination, topic, or traveler name</p>
                 <div class="search-bar" style="max-width:620px;margin:0 auto; width: 100%;">
                     <input type="text" id="search-input" placeholder="Kyoto, Vietnam, solo travel, budget tips..." autofocus>
@@ -63,17 +63,17 @@
                 <!-- Sidebar -->
                 <aside class="results-sidebar">
                     <div class="filter-panel">
-                        <div class="filter-title">🔧 Refine Results</div>
+                        <div class="filter-title">ðŸ”§ Refine Results</div>
                         <div class="filter-group">
                             <div class="filter-group-label">Travel Style</div>
                             <div class="filter-chips">
                                 <div class="filter-chip s-chip active" data-val="">All</div>
-                                <div class="filter-chip s-chip" data-val="Adventure">🏔️ Adventure</div>
-                                <div class="filter-chip s-chip" data-val="Cultural">🏛️ Cultural</div>
-                                <div class="filter-chip s-chip" data-val="Budget">🎒 Budget</div>
-                                <div class="filter-chip s-chip" data-val="Luxury">💎 Luxury</div>
-                                <div class="filter-chip s-chip" data-val="Solo">🧍 Solo</div>
-                                <div class="filter-chip s-chip" data-val="Family">👨‍👩‍👧 Family</div>
+                                <div class="filter-chip s-chip" data-val="Adventure">ðŸ”ï¸ Adventure</div>
+                                <div class="filter-chip s-chip" data-val="Cultural">ðŸ›ï¸ Cultural</div>
+                                <div class="filter-chip s-chip" data-val="Budget">ðŸŽ’ Budget</div>
+                                <div class="filter-chip s-chip" data-val="Luxury">ðŸ’Ž Luxury</div>
+                                <div class="filter-chip s-chip" data-val="Solo">ðŸ§ Solo</div>
+                                <div class="filter-chip s-chip" data-val="Family">ðŸ‘¨â€ðŸ‘©â€ðŸ‘§ Family</div>
                             </div>
                         </div>
                         <div class="filter-group">
@@ -96,7 +96,7 @@
                         </div>
                         <button class="btn btn-primary" style="width:100%;justify-content:center;"
                             onclick="runSearch()">Apply</button>
-                        <div class="filter-clear" onclick="clearAll()">✕ Clear all</div>
+                        <div class="filter-clear" onclick="clearAll()">âœ• Clear all</div>
                     </div>
                 </aside>
 
@@ -106,7 +106,7 @@
                     </div>
                     <div class="results-grid" id="results-grid"></div>
                     <div id="results-empty" class="empty-state" style="display:none;">
-                        <div class="empty-icon">🔍</div>
+                        <div class="empty-icon">ðŸ”</div>
                         <h3 class="empty-title">No results found</h3>
                         <p class="empty-desc">Try different keywords or broaden your filters.</p>
                     </div>
@@ -165,7 +165,7 @@
                 const author = UserDB.getById(p.userId);
                 const initials = author?.name?.[0]?.toUpperCase() || '?';
                 const isLiked = session && p.likes.includes(session.id);
-                const img = p.photos?.[0] ? `<img src="${p.photos[0]}" alt="${p.title}" loading="lazy">` : `<div class="exp-card-img-placeholder">🌍</div>`;
+                const img = p.photos?.[0] ? `<img src="${p.photos[0]}" alt="${p.title}" loading="lazy">` : `<div class="exp-card-img-placeholder">ðŸŒ</div>`;
                 const titleHL = highlight(p.title, q);
                 const destHL = highlight(p.destination, q);
                 return `
@@ -173,7 +173,7 @@
             <a href="experience-detail.html?id=${p.id}" style="text-decoration:none;display:block;">
               <div class="exp-card-img">${img}<span class="exp-card-badge">${p.travelStyle}</span></div>
               <div class="exp-card-body">
-                <div class="exp-card-dest">📍 ${destHL}</div>
+                <div class="exp-card-dest">ðŸ“ ${destHL}</div>
                 <h3 class="exp-card-title">${titleHL}</h3>
                 <p class="exp-card-excerpt">${p.description}</p>
               </div>
@@ -185,7 +185,7 @@
                   <span class="exp-card-author-name">${highlight(author?.name || 'Unknown', q)}</span>
                 </a>
                 <div class="exp-card-stats">
-                  <span class="exp-card-stat" style="${isLiked ? 'color:var(--danger);' : ''}">❤️ ${p.likes.length}</span>
+                  <span class="exp-card-stat" style="${isLiked ? 'color:var(--danger);' : ''}">â¤ï¸ ${p.likes.length}</span>
                 </div>
               </div>
             </div>

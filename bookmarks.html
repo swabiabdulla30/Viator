@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bookmarks – VIATOR</title>
+    <title>Bookmarks â€“ VIATOR</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
         .bm-grid {
@@ -18,7 +18,7 @@
 <body>
     <nav class="navbar">
         <div class="container">
-            <a href="index.html" class="nav-logo"><svg class="nav-logo-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 4L12 20L20 4H16.5L12 14L7.5 4H4Z" fill="currentColor"/><path d="M12 8L11 11H13L12 8Z" fill="white"/></svg> VIATOR<span></span></a>
+            <a href="index.html" class="nav-logo"><img src="assets/logo_editorial_transparent.png" alt="Viator Logo" style="height: 28px; width: auto; margin-right: 8px; vertical-align: middle;"> VIATOR<span></span></a>
             <div class="nav-links" id="nav-links"></div>
             <div class="nav-actions" id="nav-actions"></div>
             <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
@@ -29,14 +29,14 @@
         <div class="container">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;">
                 <div>
-                    <h1 style="margin-bottom:0.25rem;">🔖 Your Bookmarks</h1>
+                    <h1 style="margin-bottom:0.25rem;">ðŸ”– Your Bookmarks</h1>
                     <p style="color:var(--text-secondary);">Experiences you've saved for later</p>
                 </div>
-                <a href="feed.html" class="btn btn-ghost">← Back to Feed</a>
+                <a href="feed.html" class="btn btn-ghost">â† Back to Feed</a>
             </div>
             <div class="bm-grid" id="bm-grid"></div>
             <div class="empty-state" id="bm-empty" style="display:none;">
-                <div class="empty-icon">🔖</div>
+                <div class="empty-icon">ðŸ”–</div>
                 <h3 class="empty-title">No bookmarks yet</h3>
                 <p class="empty-desc">Bookmark experiences from the feed to save them here for future planning.</p>
                 <a href="feed.html" class="btn btn-primary">Browse Feed</a>
@@ -64,13 +64,13 @@
             grid.innerHTML = posts.map(p => {
                 const author = UserDB.getById(p.userId);
                 const initials = author?.name?.[0]?.toUpperCase() || '?';
-                const img = p.photos?.[0] ? `<img src="${p.photos[0]}" alt="${p.title}" loading="lazy">` : `<div class="exp-card-img-placeholder">🌍</div>`;
+                const img = p.photos?.[0] ? `<img src="${p.photos[0]}" alt="${p.title}" loading="lazy">` : `<div class="exp-card-img-placeholder">ðŸŒ</div>`;
                 return `
           <article class="exp-card">
             <a href="experience-detail.html?id=${p.id}" style="text-decoration:none;display:block;">
               <div class="exp-card-img">${img}<span class="exp-card-badge">${p.travelStyle}</span></div>
               <div class="exp-card-body">
-                <div class="exp-card-dest">📍 ${p.destination}</div>
+                <div class="exp-card-dest">ðŸ“ ${p.destination}</div>
                 <h3 class="exp-card-title">${p.title}</h3>
                 <p class="exp-card-excerpt">${p.description}</p>
               </div>
@@ -80,7 +80,7 @@
                 <div class="exp-card-avatar">${initials}</div>
                 <span class="exp-card-author-name">${author?.name || 'Unknown'}</span>
               </a>
-              <button class="btn btn-ghost btn-sm" onclick="removeBookmark('${p.id}')">🗑️ Remove</button>
+              <button class="btn btn-ghost btn-sm" onclick="removeBookmark('${p.id}')">ðŸ—‘ï¸ Remove</button>
             </div>
           </article>`;
             }).join('');
