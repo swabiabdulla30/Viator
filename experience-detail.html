@@ -4,14 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Experience â€“ VIATOR</title>
+    <title>Experience – VIATOR</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
     <nav class="navbar">
         <div class="container">
-            <a href="index.html" class="nav-logo"><img src="assets/logo_editorial_transparent.png" alt="Viator Logo" style="height: 28px; width: auto; margin-right: 8px; vertical-align: middle;"> VIATOR<span></span></a>
+            <a href="index.html" class="nav-logo"><svg class="nav-logo-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 4L12 20L20 4H16.5L12 14L7.5 4H4Z" fill="currentColor"/><path d="M12 8L11 11H13L12 8Z" fill="white"/></svg> VIATOR<span></span></a>
             <div class="nav-links" id="nav-links"></div>
             <div class="nav-actions" id="nav-actions"></div>
             <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
@@ -22,7 +22,7 @@
         <div class="container" style="max-width:900px; width: 100%;">
             <div id="post-content"></div>
             <div id="not-found" style="display:none;" class="empty-state">
-                <div class="empty-icon">ðŸ—ºï¸</div>
+                <div class="empty-icon">🗺️</div>
                 <h3 class="empty-title">Experience not found</h3>
                 <p class="empty-desc">This post may have been removed or doesn't exist.</p>
                 <a href="feed.html" class="btn btn-primary">Browse Feed</a>
@@ -36,8 +36,8 @@
     <div class="modal-overlay" id="report-modal">
         <div class="modal">
             <div class="modal-header">
-                <h3 class="modal-title">ðŸš¨ Report Content</h3>
-                <button class="modal-close" onclick="closeModal('report-modal')">âœ•</button>
+                <h3 class="modal-title">🚨 Report Content</h3>
+                <button class="modal-close" onclick="closeModal('report-modal')">✕</button>
             </div>
             <div class="form-group" style="margin-bottom:1.25rem;">
                 <label class="form-label">Reason</label>
@@ -84,7 +84,7 @@
             const isAdmin = session?.role === 'admin';
             const isLiked = session && post.likes.includes(session.id);
             const isBookmarked = session && (UserDB.getById(session.id)?.bookmarks || []).includes(post.id);
-            document.title = `${post.title} â€“ VIATOR`;
+            document.title = `${post.title} – VIATOR`;
 
             // Photo carousel or placeholder
             let photosHTML = '';
@@ -96,14 +96,14 @@
                 <div class="photo-carousel-slide"><img src="${src}" alt="${post.title}"></div>`).join('')}
             </div>
             ${post.photos.length > 1 ? `
-              <button class="carousel-btn prev" onclick="carousel(-1)">â€¹</button>
-              <button class="carousel-btn next" onclick="carousel(1)">â€º</button>
+              <button class="carousel-btn prev" onclick="carousel(-1)">‹</button>
+              <button class="carousel-btn next" onclick="carousel(1)">›</button>
               <div class="carousel-dots" id="carousel-dots">
                 ${post.photos.map((_, i) => `<div class="carousel-dot ${i === 0 ? 'active' : ''}" onclick="goSlide(${i})"></div>`).join('')}
               </div>` : ''}
           </div>`;
             } else {
-                photosHTML = `<div style="height:260px;border-radius:var(--radius-xl);background:linear-gradient(135deg,#0d2440,#071220);display:flex;align-items:center;justify-content:center;font-size:5rem;margin-bottom:2rem;">ðŸŒ</div>`;
+                photosHTML = `<div style="height:260px;border-radius:var(--radius-xl);background:linear-gradient(135deg,#0d2440,#071220);display:flex;align-items:center;justify-content:center;font-size:5rem;margin-bottom:2rem;">🌍</div>`;
             }
 
             const tagsHTML = (post.tags || []).map(t => `<span class="badge badge-muted">${t}</span>`).join('');
@@ -111,7 +111,7 @@
             document.getElementById('post-content').innerHTML = `
         <!-- Back link -->
         <a href="feed.html" style="display:inline-flex;align-items:center;gap:0.4rem;color:var(--text-muted);font-size:0.875rem;margin-bottom:1.5rem;">
-          â† Back to Feed
+          ← Back to Feed
         </a>
 
         ${photosHTML}
@@ -126,12 +126,12 @@
             </div>
             <h1 style="font-size:clamp(1.5rem,3vw,2.25rem);margin-bottom:0.75rem;">${post.title}</h1>
             <div style="display:flex;align-items:center;gap:0.5rem;color:var(--primary);font-weight:600;font-size:0.9rem;">
-              ðŸ“ ${post.destination}
+              📍 ${post.destination}
             </div>
           </div>
           <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
-            ${isOwner ? `<a href="create-post.html?edit=${post.id}" class="btn btn-ghost btn-sm">âœï¸ Edit</a>` : ''}
-            ${isOwner || isAdmin ? `<button class="btn btn-danger btn-sm" onclick="deletePost()">ðŸ—‘ï¸ Delete</button>` : ''}
+            ${isOwner ? `<a href="create-post.html?edit=${post.id}" class="btn btn-ghost btn-sm">✏️ Edit</a>` : ''}
+            ${isOwner || isAdmin ? `<button class="btn btn-danger btn-sm" onclick="deletePost()">🗑️ Delete</button>` : ''}
           </div>
         </div>
 
@@ -147,7 +147,7 @@
         <!-- Description -->
         <div class="card" style="margin-bottom:1.5rem;">
           <div class="card-body">
-            <h3 style="margin-bottom:1rem;font-size:1.1rem;">ðŸ“– The Story</h3>
+            <h3 style="margin-bottom:1rem;font-size:1.1rem;">📖 The Story</h3>
             <div style="color:var(--text-secondary);line-height:1.8;white-space:pre-line;">${post.description}</div>
           </div>
         </div>
@@ -156,7 +156,7 @@
         ${post.tips ? `
         <div class="card" style="margin-bottom:1.5rem;">
           <div class="card-body">
-            <h3 style="margin-bottom:1rem;font-size:1.1rem;color:var(--primary);">ðŸ’¡ Traveler Tips</h3>
+            <h3 style="margin-bottom:1rem;font-size:1.1rem;color:var(--primary);">💡 Traveler Tips</h3>
             <p style="color:var(--text-secondary);line-height:1.7;white-space:pre-line;">${post.tips}</p>
           </div>
         </div>` : ''}
@@ -164,7 +164,7 @@
         ${post.lessons ? `
         <div class="card" style="margin-bottom:1.5rem;">
           <div class="card-body">
-            <h3 style="margin-bottom:1rem;font-size:1.1rem;color:var(--accent);">ðŸŽ“ Lessons Learned</h3>
+            <h3 style="margin-bottom:1rem;font-size:1.1rem;color:var(--accent);">🎓 Lessons Learned</h3>
             <p style="color:var(--text-secondary);line-height:1.7;white-space:pre-line;">${post.lessons}</p>
           </div>
         </div>` : ''}
@@ -172,19 +172,19 @@
         <!-- Actions bar -->
         <div class="flex-stack-mobile" style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;margin-bottom:2.5rem;padding:1.5rem;background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-lg);">
           <button class="btn btn-ghost" id="like-btn" onclick="toggleLike()" style="flex: 1;">
-            ${isLiked ? 'â¤ï¸' : 'ðŸ¤'} <span id="like-count">${post.likes.length}</span> ${isLiked ? 'Liked' : 'Like'}
+            ${isLiked ? '❤️' : '🤍'} <span id="like-count">${post.likes.length}</span> ${isLiked ? 'Liked' : 'Like'}
           </button>
           <button class="btn btn-ghost" id="bookmark-btn" onclick="toggleBookmark()" style="flex: 1;">
-            ${isBookmarked ? 'ðŸ”–' : 'ðŸ“‘'} ${isBookmarked ? 'Bookmarked' : 'Bookmark'}
+            ${isBookmarked ? '🔖' : '📑'} ${isBookmarked ? 'Bookmarked' : 'Bookmark'}
           </button>
-          <button class="btn btn-ghost" onclick="sharePost()" style="flex: 1;">ðŸ”— Share</button>
-          ${session && !isOwner ? `<button class="btn btn-ghost" style="margin-left:auto;color:var(--danger); flex: 1;" onclick="openModal('report-modal')">ðŸš¨ Report</button>` : ''}
+          <button class="btn btn-ghost" onclick="sharePost()" style="flex: 1;">🔗 Share</button>
+          ${session && !isOwner ? `<button class="btn btn-ghost" style="margin-left:auto;color:var(--danger); flex: 1;" onclick="openModal('report-modal')">🚨 Report</button>` : ''}
         </div>
 
         <!-- Comments -->
         <div class="card">
           <div class="card-header">
-            <h3 style="font-size:1.1rem;margin:0;">ðŸ’¬ Comments (<span id="comment-count">${CommentDB.getByPost(postId).length}</span>)</h3>
+            <h3 style="font-size:1.1rem;margin:0;">💬 Comments (<span id="comment-count">${CommentDB.getByPost(postId).length}</span>)</h3>
           </div>
           <div class="card-body">
             ${session ? `
@@ -242,8 +242,8 @@
               </div>
               <div class="comment-text">${c.text}</div>
               <div class="comment-actions">
-                ${session && !isReply ? `<button class="comment-action-btn" onclick="startReply('${c.id}','${user?.name}')">ðŸ’¬ Reply</button>` : ''}
-                ${canDelete ? `<button class="comment-action-btn" style="color:var(--danger);" onclick="deleteComment('${c.id}')">ðŸ—‘ï¸ Delete</button>` : ''}
+                ${session && !isReply ? `<button class="comment-action-btn" onclick="startReply('${c.id}','${user?.name}')">💬 Reply</button>` : ''}
+                ${canDelete ? `<button class="comment-action-btn" style="color:var(--danger);" onclick="deleteComment('${c.id}')">🗑️ Delete</button>` : ''}
               </div>
               ${!isReply && c.replies?.length ? `
                 <div class="comment-replies">${c.replies.map(r => renderComment(r, true)).join('')}</div>` : ''}
@@ -279,7 +279,7 @@
             CommentDB.create({ postId, userId: session.id, parentId, text });
             if (!parentId) document.getElementById('new-comment').value = '';
             renderComments();
-            showToast('Comment posted! ðŸ’¬', 'success');
+            showToast('Comment posted! 💬', 'success');
         }
 
         function deleteComment(id) {
@@ -297,8 +297,8 @@
             const post = PostDB.getById(postId);
             const btn = document.getElementById('like-btn');
             const count = document.getElementById('like-count');
-            btn.innerHTML = `${liked ? 'â¤ï¸' : 'ðŸ¤'} <span id="like-count">${post.likes.length}</span> ${liked ? 'Liked' : 'Like'}`;
-            showToast(liked ? 'Added to liked posts â¤ï¸' : 'Removed from liked posts', liked ? 'success' : 'info');
+            btn.innerHTML = `${liked ? '❤️' : '🤍'} <span id="like-count">${post.likes.length}</span> ${liked ? 'Liked' : 'Like'}`;
+            showToast(liked ? 'Added to liked posts ❤️' : 'Removed from liked posts', liked ? 'success' : 'info');
         }
 
         function toggleBookmark() {
@@ -306,14 +306,14 @@
             if (!session) { window.location.href = 'login.html'; return; }
             const bookmarked = UserDB.toggleBookmark(session.id, postId);
             SessionDB.set(UserDB.getById(session.id));
-            document.getElementById('bookmark-btn').innerHTML = bookmarked ? 'ðŸ”– Bookmarked' : 'ðŸ“‘ Bookmark';
-            showToast(bookmarked ? 'Bookmarked! ðŸ”–' : 'Removed from bookmarks', bookmarked ? 'success' : 'info');
+            document.getElementById('bookmark-btn').innerHTML = bookmarked ? '🔖 Bookmarked' : '📑 Bookmark';
+            showToast(bookmarked ? 'Bookmarked! 🔖' : 'Removed from bookmarks', bookmarked ? 'success' : 'info');
         }
 
         function sharePost() {
             if (navigator.clipboard) {
                 navigator.clipboard.writeText(window.location.href);
-                showToast('Link copied to clipboard! ðŸ”—', 'success');
+                showToast('Link copied to clipboard! 🔗', 'success');
             }
         }
 
@@ -333,7 +333,7 @@
             if (!reason) { showToast('Please select a reason.', 'warning'); return; }
             ReportDB.create({ postId, userId: session.id, reason, details });
             closeModal('report-modal');
-            showToast('Report submitted. Thank you! ðŸš¨', 'success');
+            showToast('Report submitted. Thank you! 🚨', 'success');
         }
 
         document.addEventListener('DOMContentLoaded', render);

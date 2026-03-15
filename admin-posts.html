@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Posts – VIATOR Admin</title>
+    <title>Posts � VIATOR Admin</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 
@@ -21,16 +21,16 @@
                 <a class="admin-nav-item" href="admin-users.html"><span class="nav-icon">👥</span> Users</a>
                 <a class="admin-nav-item" href="admin-reports.html"><span class="nav-icon">🚨</span> Reports</a>
                 <div class="admin-nav-label" style="margin-top:1rem;">Account</div>
-                <a class="admin-nav-item" href="index.html" target="_blank"><span class="nav-icon">🌐</span> View
+                <a class="admin-nav-item" href="index.html" target="_blank"><span class="nav-icon">??</span> View
                     Site</a>
                 <button class="admin-nav-item" style="width:100%;text-align:left;" onclick="logout()"><span
-                        class="nav-icon">🚪</span> Log Out</button>
+                        class="nav-icon">??</span> Log Out</button>
             </nav>
         </aside>
 
         <main class="admin-main">
             <div class="admin-topbar">
-                <div class="admin-page-title">📝 Post Moderation</div>
+                <div class="admin-page-title">?? Post Moderation</div>
                 <div class="search-bar" style="max-width:300px;">
                     <input type="text" id="post-search" placeholder="Search posts..." oninput="renderPosts()">
                     <button class="search-bar-btn" onclick="renderPosts()">Go</button>
@@ -39,9 +39,9 @@
 
             <div style="display:flex;gap:0.5rem;margin-bottom:1.5rem;">
                 <button class="tab-btn active" data-s="all" onclick="setStatus(this)">All</button>
-                <button class="tab-btn" data-s="pending" onclick="setStatus(this)">⏳ Pending</button>
-                <button class="tab-btn" data-s="approved" onclick="setStatus(this)">✅ Approved</button>
-                <button class="tab-btn" data-s="rejected" onclick="setStatus(this)">❌ Rejected</button>
+                <button class="tab-btn" data-s="pending" onclick="setStatus(this)">? Pending</button>
+                <button class="tab-btn" data-s="approved" onclick="setStatus(this)">? Approved</button>
+                <button class="tab-btn" data-s="rejected" onclick="setStatus(this)">? Rejected</button>
             </div>
 
             <div class="table-wrap">
@@ -60,7 +60,7 @@
                 </table>
             </div>
             <div id="posts-empty" class="empty-state" style="display:none;">
-                <div class="empty-icon">📝</div>
+                <div class="empty-icon">??</div>
                 <h3 class="empty-title">No posts found</h3>
             </div>
         </main>
@@ -101,9 +101,9 @@
                 return `<tr>
         <td>
           <a href="experience-detail.html?id=${p.id}" target="_blank" style="color:var(--text-primary);font-weight:600;font-size:0.85rem;">
-            ${p.title.substring(0, 55)}${p.title.length > 55 ? '…' : ''}
+            ${p.title.substring(0, 55)}${p.title.length > 55 ? '�' : ''}
           </a>
-          <div style="font-size:0.75rem;color:var(--text-muted);">📍 ${p.destination}</div>
+          <div style="font-size:0.75rem;color:var(--text-muted);">?? ${p.destination}</div>
         </td>
         <td style="font-size:0.85rem;color:var(--text-secondary);">${author?.name || '-'}</td>
         <td><span class="badge badge-muted" style="font-size:0.72rem;">${p.travelStyle || '-'}</span></td>
@@ -111,9 +111,9 @@
         <td><span class="badge ${bc}">${p.status}</span></td>
         <td>
           <div class="table-actions">
-            ${p.status !== 'approved' ? `<button class="btn btn-primary btn-sm" onclick="approvePost('${p.id}')">✅</button>` : ''}
-            ${p.status !== 'rejected' ? `<button class="btn btn-ghost btn-sm" onclick="rejectPost('${p.id}')">✕</button>` : ''}
-            <button class="btn btn-danger btn-sm" onclick="deletePost('${p.id}')">🗑️</button>
+            ${p.status !== 'approved' ? `<button class="btn btn-primary btn-sm" onclick="approvePost('${p.id}')">?</button>` : ''}
+            ${p.status !== 'rejected' ? `<button class="btn btn-ghost btn-sm" onclick="rejectPost('${p.id}')">?</button>` : ''}
+            <button class="btn btn-danger btn-sm" onclick="deletePost('${p.id}')">???</button>
           </div>
         </td>
       </tr>`;
