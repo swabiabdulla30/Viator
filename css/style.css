@@ -772,10 +772,12 @@ body:not(.home) .navbar,
   align-items: center;
   gap: 0.3rem;
   padding: 0.2rem 0.65rem;
-  border-radius: var(--radius-full);
-  font-size: 0.75rem;
-  font-weight: 600;
+  border-radius: var(--radius-sm);
+  font-size: 0.7rem;
+  font-weight: 700;
   white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .badge-primary {
@@ -791,9 +793,9 @@ body:not(.home) .navbar,
 }
 
 .badge-danger {
-  background: var(--danger);
+  background: rgba(220, 38, 38, 0.1);
   color: var(--danger);
-  border: 1px solid rgba(244, 63, 94, 0.3);
+  border: 1px solid rgba(220, 38, 38, 0.2);
 }
 
 .badge-muted {
@@ -816,62 +818,50 @@ body:not(.home) .navbar,
 
 /* ── Stats Card ── */
 .stat-card {
-  background: var(--bg-secondary);
+  background: var(--bg-primary);
   border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-sm);
   padding: 1.5rem;
   transition: var(--transition);
   position: relative;
-  overflow: hidden;
 }
 
-.stat-card::before {
+.stat-card::after {
   content: '';
   position: absolute;
-  top: 0;
+  bottom: 0;
   left: 0;
   right: 0;
-  height: 3px;
-}
-
-.stat-card.teal::before {
-  background: linear-gradient(90deg, var(--accent), #00a5c4);
-}
-
-.stat-card.amber::before {
-  background: linear-gradient(90deg, var(--accent), #ff8c42);
-}
-
-.stat-card.danger::before {
-  background: linear-gradient(90deg, var(--danger), #c0392b);
-}
-
-.stat-card.purple::before {
-  background: linear-gradient(90deg, #a855f7, #7c3aed);
+  height: 2px;
+  background: var(--accent);
+  opacity: 0.3;
 }
 
 .stat-card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-md);
+  border-color: var(--accent);
 }
 
 .stat-icon {
-  font-size: 2rem;
-  margin-bottom: 0.75rem;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  opacity: 0.8;
 }
 
 .stat-value {
   font-family: var(--font-head);
-  font-size: 2.25rem;
-  font-weight: 800;
+  font-size: 2.5rem;
+  font-weight: 400;
   color: var(--text-main);
   margin-bottom: 0.25rem;
+  letter-spacing: -0.03em;
 }
 
 .stat-label {
-  font-size: 0.85rem;
-  color: var(--text-main);
-  font-weight: 500;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
 }
 
 /* ── Alerts / Toast ── */
@@ -2027,13 +2017,13 @@ body:not(.home) .navbar,
 
 .admin-sidebar {
   width: 240px;
-  background: var(--bg-secondary);
-  border-right: 1px solid var(--border);
+  background: var(--bg-dark);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
   position: fixed;
   top: 0;
   bottom: 0;
   left: 0;
-  z-index: 1001; /* bumped up for mobile */
+  z-index: 1001; 
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -2080,12 +2070,17 @@ body:not(.home) .navbar,
   gap: 0.6rem;
   font-family: var(--font-head);
   font-size: 1.3rem;
-  font-weight: 800;
-  color: var(--text-primary);
+  font-weight: 700;
+  color: var(--text-light);
 }
 
 .admin-sidebar-logo span {
-  color: var(--primary);
+  color: var(--accent);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-family: var(--font-sans);
+  font-weight: 600;
 }
 
 .admin-sidebar-logo img {
@@ -2122,21 +2117,27 @@ body:not(.home) .navbar,
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.65rem 0.75rem;
+  padding: 0.75rem 1rem;
   border-radius: var(--radius-sm);
-  color: var(--text-secondary);
-  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.8rem;
   font-weight: 500;
   transition: var(--transition);
-  margin-bottom: 0.15rem;
+  margin-bottom: 0.25rem;
   cursor: pointer;
   text-decoration: none;
+  letter-spacing: 0.02em;
 }
 
 .admin-nav-item:hover,
 .admin-nav-item.active {
-  background: var(--primary-glow);
-  color: var(--primary);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--accent);
+}
+
+.admin-nav-item.active {
+  background: var(--accent-light);
+  color: var(--accent);
 }
 
 .admin-nav-item .nav-icon {
@@ -2147,10 +2148,10 @@ body:not(.home) .navbar,
 
 .admin-nav-badge {
   margin-left: auto;
-  background: var(--danger);
+  background: var(--accent);
   color: white;
-  border-radius: var(--radius-full);
-  padding: 0.1rem 0.45rem;
+  border-radius: var(--radius-sm);
+  padding: 0.15rem 0.4rem;
   font-size: 0.65rem;
   font-weight: 700;
 }
@@ -2171,28 +2172,74 @@ body:not(.home) .navbar,
 
 .admin-page-title {
   font-family: var(--font-head);
-  font-size: 1.5rem;
-  font-weight: 800;
+  font-size: 1.75rem;
+  font-weight: 400;
+  letter-spacing: -0.02em;
 }
 
-/* Form Actions Utility */
-.form-actions-refined {
-  display: flex;
-  gap: 1rem;
-  justify-content: flex-end;
+/* Data Tables */
+.table-wrap {
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  overflow-x: auto;
 }
 
-@media (max-width: 640px) {
-  .form-actions-refined {
-    flex-direction: column-reverse; /* Primary button on top usually better, or cancel at bottom */
-    gap: 0.75rem;
-  }
-  .form-actions-refined button, 
-  .form-actions-refined .btn {
-    width: 100%;
-    justify-content: center;
-    padding: 1rem;
-  }
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.data-table th {
+  text-align: left;
+  padding: 1rem;
+  background: var(--bg-secondary);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+}
+
+.data-table td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-main);
+}
+
+.data-table tr:last-child td {
+  border-bottom: none;
+}
+
+.data-table tr:hover {
+  background: rgba(30, 41, 59, 0.02);
+}
+
+/* Admin Tabs */
+.tab-btn {
+  padding: 0.6rem 1.25rem;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: var(--transition);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.tab-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.tab-btn.active {
+  background: var(--bg-dark);
+  color: var(--accent);
+  border-color: var(--bg-dark);
 }
 
 /* ── Profile ── */

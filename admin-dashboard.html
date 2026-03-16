@@ -114,22 +114,22 @@
             document.getElementById('sb-reports').textContent = stats.pendingReports;
 
             document.getElementById('stats-grid').innerHTML = `
-      <div class="stat-card teal">
+      <div class="stat-card">
         <div class="stat-icon">👥</div>
         <div class="stat-value">${stats.totalUsers}</div>
         <div class="stat-label">Total Users</div>
       </div>
-      <div class="stat-card amber">
+      <div class="stat-card">
         <div class="stat-icon">📝</div>
         <div class="stat-value">${stats.totalPosts}</div>
         <div class="stat-label">Published Posts</div>
       </div>
-      <div class="stat-card purple">
+      <div class="stat-card">
         <div class="stat-icon">⏳</div>
         <div class="stat-value">${stats.pendingPosts}</div>
         <div class="stat-label">Pending Review</div>
       </div>
-      <div class="stat-card danger">
+      <div class="stat-card">
         <div class="stat-icon">🚨</div>
         <div class="stat-value">${stats.pendingReports}</div>
         <div class="stat-label">Open Reports</div>
@@ -154,9 +154,9 @@
                 document.getElementById('pending-empty').style.display = 'none';
                 document.getElementById('pending-list').innerHTML = pending.map(p => {
                     const author = UserDB.getById(p.userId);
-                    return `<div style="padding:0.875rem 1rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);margin-bottom:0.75rem;">
+                    return `<div style="padding:1rem;background:var(--bg-primary);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:0.75rem;">
           <div style="font-weight:600;font-size:0.875rem;margin-bottom:0.25rem;">${p.title.substring(0, 50)}${p.title.length > 50 ? '…' : ''}</div>
-          <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:0.75rem;">By ${author?.name || 'Unknown'} · ${timeAgo(p.createdAt)}</div>
+          <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:1rem;">By ${author?.name || 'Unknown'} · ${timeAgo(p.createdAt)}</div>
           <div style="display:flex;gap:0.5rem;">
             <button class="btn btn-primary btn-sm" onclick="approvePost('${p.id}')">✅ Approve</button>
             <button class="btn btn-danger btn-sm" onclick="rejectPost('${p.id}')">❌ Reject</button>
@@ -174,12 +174,12 @@
             document.getElementById('style-chart').innerHTML = counts.length === 0
                 ? '<p style="color:var(--text-muted);text-align:center;">No data yet</p>'
                 : counts.map(c => `
-        <div style="display:flex;align-items:center;gap:1rem;margin-bottom:0.75rem;">
-          <div style="width:90px;font-size:0.8rem;color:var(--text-secondary);">${c.label}</div>
-          <div style="flex:1;background:rgba(255,255,255,0.04);border-radius:var(--radius-full);height:10px;overflow:hidden;">
-            <div style="width:${(c.count / maxCount) * 100}%;background:linear-gradient(90deg,var(--primary),#00a5c4);height:100%;border-radius:var(--radius-full);transition:width 0.6s ease;"></div>
+        <div style="display:flex;align-items:center;gap:1.5rem;margin-bottom:1rem;">
+          <div style="width:100px;font-size:0.75rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;">${c.label}</div>
+          <div style="flex:1;background:var(--bg-secondary);height:8px;overflow:hidden;border-radius:var(--radius-sm);">
+            <div style="width:${(c.count / maxCount) * 100}%;background:var(--accent);height:100%;transition:width 0.6s ease;"></div>
           </div>
-          <div style="width:30px;font-size:0.8rem;font-weight:600;color:var(--text-primary);">${c.count}</div>
+          <div style="width:30px;font-size:0.85rem;font-weight:600;color:var(--text-main);">${c.count}</div>
         </div>`).join('');
         }
 

@@ -9,42 +9,45 @@
 </head>
 
 <body>
-    <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem;">
-        <div style="width:100%;max-width:420px;">
-            <div style="text-align:center;margin-bottom:2.5rem;">
-                <div style="font-size:3rem;margin-bottom:0.75rem;">🛡️</div>
-                <h1 style="font-size:2rem;margin-bottom:0.5rem;">Admin Portal</h1>
-                <p style="color:var(--text-secondary);">VIATOR Content Management</p>
+    <div class="auth-split">
+        <div class="auth-visual">
+            <img src="https://images.unsplash.com/photo-1493246507139-91e8bef99c17?auto=format&fit=crop&q=80" alt="Admin View">
+            <div class="auth-visual-overlay">
+                <div class="auth-quote">
+                    "Control the narrative, <br>craft the journey."
+                    <div class="auth-quote-author">Viator Editorial Suite</div>
+                </div>
             </div>
-            <div class="auth-card">
+        </div>
+
+        <div class="auth-panel">
+            <a href="index.html" class="auth-logo-top">VIATOR</a>
+            <a href="login.html" class="auth-back">×</a>
+
+            <div class="auth-form-wrap">
+                <h1 class="auth-title">Admin Portal</h1>
+                <p class="auth-subtitle">VIATOR Content Management</p>
+
                 <div id="form-alert"></div>
-                <form id="admin-login-form" novalidate>
-                    <div style="display:flex;flex-direction:column;gap:1.25rem;">
-                        <div class="form-group">
-                            <label class="form-label">Email</label>
-                            <div class="form-input-wrap">
-                                <span class="form-input-icon">✉️</span>
-                                <input class="form-input" id="admin-email" type="email" value="admin@viator.com"
-                                    required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Password</label>
-                            <div class="form-input-wrap">
-                                <span class="form-input-icon">🔒</span>
-                                <input class="form-input" id="admin-password" type="password" value="Admin@123"
-                                    required>
-                                <button type="button" class="toggle-pw" id="toggle-pw">👁️</button>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn btn-primary" id="admin-login-btn"
-                            style="width:100%;justify-content:center;padding:0.875rem;">
-                            🛡️ Sign In as Admin
-                        </button>
+                <form id="admin-login-form" class="auth-form" novalidate>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input class="form-input" id="admin-email" type="email" value="admin@viator.com" required>
                     </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input class="form-input" id="admin-password" type="password" value="Admin@123" required>
+                        <button type="button" class="toggle-pw" id="toggle-pw">👁️</button>
+                    </div>
+
+                    <button type="submit" class="btn-premium" id="admin-login-btn">
+                        🛡️ Sign In <span>→</span>
+                    </button>
                 </form>
-                <div style="margin-top:1.5rem;text-align:center;">
-                    <a href="login.html" style="font-size:0.85rem;color:var(--text-muted);">← Back to user login</a>
+
+                <div class="auth-link">
+                    <a href="login.html">← Back to user login</a>
                 </div>
             </div>
         </div>
