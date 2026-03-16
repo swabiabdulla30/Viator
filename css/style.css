@@ -6,9 +6,9 @@
 /* ── CSS Custom Properties ── */
 :root {
   /* Premium Classic Navy & Linen Palette */
-  --bg-primary: #f9fafb; /* Linen White */
-  --bg-secondary: #f3f4f6; /* Soft Grey */
-  --bg-dark: #1e293b; /* Deep Navy */
+  --bg-primary: #fdfbf7; /* Authentic Linen Paper */
+  --bg-secondary: #f5f2eb; /* Warm Sandstone */
+  --bg-dark: #0f172a; /* Midnight Navy */
   
   --text-main: #1e293b; /* Deep Navy */
   --text-muted: #64748b; /* Slate Grey */
@@ -820,25 +820,16 @@ body:not(.home) .navbar,
 .stat-card {
   background: var(--bg-primary);
   border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 1.5rem;
+  padding: 2rem;
   transition: var(--transition);
   position: relative;
-}
-
-.stat-card::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--accent);
-  opacity: 0.3;
+  border-left: 3px solid transparent;
 }
 
 .stat-card:hover {
-  border-color: var(--accent);
+  border-color: var(--border);
+  border-left-color: var(--accent);
+  background: var(--bg-secondary);
 }
 
 .stat-icon {
@@ -2117,27 +2108,33 @@ body:not(.home) .navbar,
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.75rem 1rem;
-  border-radius: var(--radius-sm);
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 0.8rem;
-  font-weight: 500;
+  padding: 0.8rem 1.25rem;
+  background: transparent;
+  border: none;
+  border-left: 2px solid transparent;
+  width: 100%;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.75rem;
+  font-weight: 600;
   transition: var(--transition);
   margin-bottom: 0.25rem;
   cursor: pointer;
   text-decoration: none;
-  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-align: left;
 }
 
-.admin-nav-item:hover,
-.admin-nav-item.active {
-  background: rgba(255, 255, 255, 0.05);
+.admin-nav-item:hover {
+  background: rgba(255, 255, 255, 0.04);
   color: var(--accent);
+  border-left-color: var(--accent);
 }
 
 .admin-nav-item.active {
-  background: var(--accent-light);
+  background: rgba(180, 83, 9, 0.08); /* Faint bronze highlight */
   color: var(--accent);
+  border-left-color: var(--accent);
 }
 
 .admin-nav-item .nav-icon {
@@ -2192,20 +2189,21 @@ body:not(.home) .navbar,
 
 .data-table th {
   text-align: left;
-  padding: 1rem;
+  padding: 1.25rem 1rem;
   background: var(--bg-secondary);
   font-weight: 700;
   text-transform: uppercase;
-  font-size: 0.65rem;
-  letter-spacing: 0.1em;
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
   color: var(--text-muted);
   border-bottom: 1px solid var(--border);
 }
 
 .data-table td {
-  padding: 1rem;
+  padding: 1.25rem 1rem;
   border-bottom: 1px solid var(--border);
   color: var(--text-main);
+  font-size: 0.8rem;
 }
 
 .data-table tr:last-child td {
