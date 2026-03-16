@@ -190,11 +190,13 @@ p {
   max-width: 1280px;
   margin: 0 auto;
   padding: 0 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 @media (max-width: 640px) {
   .container {
-    padding: 0 1.5rem;
+    padding: 0 1rem;
   }
 }
 
@@ -1054,6 +1056,8 @@ body:not(.home) .navbar,
   border-radius: var(--radius-full);
   padding: 0.5rem 0.5rem 0.5rem 1.25rem;
   transition: var(--transition);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .search-bar:focus-within {
@@ -1942,6 +1946,7 @@ body:not(.home) .navbar,
 .filter-scroll-wrapper {
   margin: 0 -0.5rem;
   padding: 0 0.5rem;
+  max-width: 100%;
 }
 
 .filter-chips {
@@ -2006,6 +2011,20 @@ body:not(.home) .navbar,
   
   .filter-header-mobile {
     padding: 0 0.25rem;
+  }
+
+  /* Search Bar Mobile Refinement */
+  .search-bar {
+    padding: 0.35rem 0.35rem 0.35rem 1rem;
+  }
+
+  .search-bar input {
+    font-size: 0.8rem;
+  }
+
+  .search-bar-btn {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.75rem;
   }
 }
 
