@@ -2320,8 +2320,14 @@ body:not(.home) .navbar,
     padding: 0 1.25rem;
   }
 
-  .nav-links, .nav-actions {
+  .nav-links {
     display: none;
+  }
+  
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
   }
 
   .hamburger {
@@ -2329,12 +2335,14 @@ body:not(.home) .navbar,
   }
 
   .nav-login-link {
-    display: none !important;
+    display: block !important;
+    font-size: 0.8rem !important;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
 
-  .nav-signup-link {
-    padding: 0.6rem 1rem !important;
-    font-size: 0.7rem !important;
+  .nav-signup-link, .nav-share-btn, .nav-dropdown {
+    display: none !important;
   }
 
   .footer-grid {
