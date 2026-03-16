@@ -52,53 +52,60 @@
     <main class="page-content">
         <div class="container">
             <!-- Sort + Search bar -->
-            <div class="flex-between flex-stack-mobile" style="gap:1.5rem;margin-bottom:2rem;">
-                <div class="search-bar" style="flex:1; width: 100%;">
-                    <input type="text" id="feed-search" placeholder="Search experiences, destinations...">
-                    <button class="search-bar-btn" onclick="applyFilters()">Search</button>
+            <div class="feed-header-actions">
+                <div class="search-bar-wrap">
+                    <div class="search-bar">
+                        <input type="text" id="feed-search" placeholder="Search experiences, destinations...">
+                        <button class="search-bar-btn" onclick="applyFilters()">Search</button>
+                    </div>
                 </div>
-                <div class="flex gap-1" style="flex-wrap: wrap; justify-content: center;">
-                    <button class="btn btn-ghost btn-sm sort-btn active" data-sort="latest">Latest</button>
-                    <button class="btn btn-ghost btn-sm sort-btn" data-sort="popular">Most Liked</button>
-                    <button class="btn btn-ghost btn-sm sort-btn" data-sort="comments">Most Discussed</button>
+                <div class="sort-selector-wrap">
+                    <div class="sort-chips">
+                        <button class="sort-btn active" data-sort="latest">Latest</button>
+                        <button class="sort-btn" data-sort="popular">Popular</button>
+                        <button class="sort-btn" data-sort="comments">Trending</button>
+                    </div>
                 </div>
             </div>
             <div class="feed-layout">
                 <!-- Sidebar Filters -->
                 <aside class="feed-sidebar">
-                    <div class="filter-panel">
-                        <div class="filter-title">🔧 Filters</div>
-
-                        <div class="filter-group">
-                            <div class="filter-group-label">Travel Style</div>
-                            <div class="filter-chips" id="style-chips">
-                                <div class="filter-chip" data-filter="style" data-val="">All</div>
-                                <div class="filter-chip" data-filter="style" data-val="Adventure">🏔️ Adventure</div>
-                                <div class="filter-chip" data-filter="style" data-val="Cultural">🏛️ Cultural</div>
-                                <div class="filter-chip" data-filter="style" data-val="Budget">🎒 Budget</div>
-                                <div class="filter-chip" data-filter="style" data-val="Luxury">💎 Luxury</div>
-                                <div class="filter-chip" data-filter="style" data-val="Solo">🧍 Solo</div>
-                                <div class="filter-chip" data-filter="style" data-val="Family">👨‍👩‍👧 Family</div>
-                            </div>
+                    <div class="filter-panel-refined">
+                        <div class="filter-header-mobile">
+                            <span class="filter-title">Filters</span>
+                            <span class="filter-clear-inline" onclick="clearFilters()">Clear all</span>
                         </div>
 
-                        <div class="filter-group">
-                            <div class="filter-group-label">Budget Range</div>
-                            <div class="filter-chips" id="budget-chips">
-                                <div class="filter-chip" data-filter="budget" data-val="">All</div>
-                                <div class="filter-chip" data-filter="budget" data-val="Budget (Under $50/day)">Budget
+                        <div class="filter-section">
+                            <div class="filter-label">Style</div>
+                            <div class="filter-scroll-wrapper">
+                                <div class="filter-chips" id="style-chips">
+                                    <div class="filter-chip" data-filter="style" data-val="">All</div>
+                                    <div class="filter-chip" data-filter="style" data-val="Adventure">Adventure</div>
+                                    <div class="filter-chip" data-filter="style" data-val="Cultural">Cultural</div>
+                                    <div class="filter-chip" data-filter="style" data-val="Budget">Budget</div>
+                                    <div class="filter-chip" data-filter="style" data-val="Luxury">Luxury</div>
+                                    <div class="filter-chip" data-filter="style" data-val="Solo">Solo</div>
+                                    <div class="filter-chip" data-filter="style" data-val="Family">Family</div>
                                 </div>
-                                <div class="filter-chip" data-filter="budget" data-val="Mid-range ($50-150/day)">
-                                    Mid-range</div>
-                                <div class="filter-chip" data-filter="budget" data-val="Luxury ($200+/day)">Luxury</div>
                             </div>
                         </div>
 
+                        <div class="filter-section">
+                            <div class="filter-label">Budget</div>
+                            <div class="filter-scroll-wrapper">
+                                <div class="filter-chips" id="budget-chips">
+                                    <div class="filter-chip" data-val="">All</div>
+                                    <div class="filter-chip" data-filter="budget" data-val="Budget (Under $50/day)">Budget</div>
+                                    <div class="filter-chip" data-filter="budget" data-val="Mid-range ($50-150/day)">Mid-range</div>
+                                    <div class="filter-chip" data-filter="budget" data-val="Luxury ($200+/day)">Luxury</div>
+                                </div>
+                            </div>
+                        </div>
 
-
-                        <button class="btn btn-primary" style="width:100%;justify-content:center;"
-                            onclick="applyFilters()">Apply Filters</button>
-                        <div class="filter-clear" onclick="clearFilters()">✕ Clear all filters</div>
+                        <div class="filter-actions-desktop">
+                            <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="applyFilters()">Apply Filters</button>
+                        </div>
                     </div>
                 </aside>
 
