@@ -130,8 +130,7 @@ function redirectIfAdminLoggedIn(dest = 'admin-dashboard.html') {
 /* ── Shared Navbar HTML ── */
 function getNavbarHTML(activePage = '') {
     const links = `
-        <a href="feed.html">Stories</a>
-        <a href="search.html">Destinations</a>
+        <a href="feed.html">Explore</a>
         <a href="#contact">Contact</a>
     `;
     return `
