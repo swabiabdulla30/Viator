@@ -28,19 +28,20 @@ function initNavbar() {
     if (session) {
         const initial = session.name ? session.name[0].toUpperCase() : '?';
         navActions.innerHTML = `
-      <a href="create-post.html" class="btn-premium" id="nav-create-btn" style="padding: 0.7rem 1.5rem; font-size: 0.65rem; margin-top:0;">
-        + SHARE STORY
-      </a>
-      <div class="nav-dropdown" id="user-dropdown">
-        <div class="nav-avatar" id="nav-avatar-btn" title="${session.name}">${initial}</div>
-        <div class="nav-dropdown-menu">
-          <a href="profile.html?id=${session.id}">👤 My Profile</a>
-          <a href="bookmarks.html">🔖 Bookmarks</a>
-          ${session.role === 'admin' ? '<a href="admin-dashboard.html">🛡️ Admin Panel</a>' : ''}
-          <div class="divider"></div>
-          <button onclick="logout()">🚪 Log Out</button>
-        </div>
       </div>`;
+        
+        // Mobile menu sync
+        const mobileActions = document.querySelector('.mobile-nav-actions');
+        if (mobileActions) {
+            mobileActions.innerHTML = `
+                <a href="create-post.html" class="btn-premium" style="margin-top:0;">SHARE STORY <span class="arrow">→</span></a>
+                <div style="margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem;">
+                    <a href="profile.html?id=${session.id}" style="font-size: 1.2rem; border: none; padding: 0.5rem 0;">My Profile</a>
+                    <a href="bookmarks.html" style="font-size: 1.2rem; border: none; padding: 0.5rem 0;">Bookmarks</a>
+                    <button onclick="logout()" style="background: none; border: none; color: var(--danger); font-family: var(--font-head); font-size: 1.2rem; text-align: left; padding: 0.5rem 0; cursor: pointer;">Log Out</button>
+                </div>
+            `;
+        }
         document.getElementById('nav-avatar-btn')?.addEventListener('click', () => {
             document.getElementById('user-dropdown').classList.toggle('open');
         });
@@ -52,7 +53,18 @@ function initNavbar() {
     } else {
         navActions.innerHTML = `
       <a href="login.html" class="btn-text nav-login-link">Log In</a>
-      <a href="register.html" class="btn-outline nav-signup-link">+ SHARE STORY</a>`;
+      <a href="register.html" class="btn-outline nav-signup-link">SHARE STORY</a>`;
+      
+        // Mobile menu sync (logged out)
+        const mobileActions = document.querySelector('.mobile-nav-actions');
+        if (mobileActions) {
+            mobileActions.innerHTML = `
+                <a href="register.html" class="btn-premium" style="margin-top:0;">SHARE STORY <span class="arrow">→</span></a>
+                <div style="margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem;">
+                    <a href="login.html" style="font-size: 1.2rem; border: none; padding: 0.5rem 0;">Log In</a>
+                </div>
+            `;
+        }
     }
 }
 
@@ -130,9 +142,8 @@ function getNavbarHTML(activePage = '') {
     <div class="mobile-nav">
       ${links}
       <div class="mobile-nav-actions" style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--border);">
-         <!-- Actions will be injected here via JS if needed -->
+         <!-- Actions injected here via initNavbar -->
       </div>
-      <a href="register.html" class="btn-premium">Become a Writer <span class="arrow">→</span></a>
     </div>`;
 }
 

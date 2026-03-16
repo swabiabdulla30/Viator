@@ -2320,7 +2320,7 @@ body:not(.home) .navbar,
     padding: 0 1.25rem;
   }
 
-  .nav-links {
+  .nav-links, .nav-actions {
     display: none;
   }
 
@@ -2377,6 +2377,7 @@ body:not(.home) .navbar,
     display: flex;
     justify-content: space-between;
     align-items: center;
+    text-decoration: none;
   }
   
   .mobile-nav a::after {
