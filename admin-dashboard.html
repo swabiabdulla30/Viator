@@ -13,7 +13,7 @@
         <!-- Sidebar -->
         <aside class="admin-sidebar" id="admin-sidebar">
             <div class="admin-sidebar-logo">
-                <a href="admin-dashboard.html"><img src="assets/logo_editorial_transparent.png" alt="Viator Logo"> VIATOR <span>Admin</span></a>
+                <a href="admin-dashboard.html"><svg class="nav-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 8px;"><path d="M4 4L12 20L20 4H16.5L12 14L7.5 4H4Z" fill="currentColor"/><path d="M12 8L11 11H13L12 8Z" fill="white"/></svg> VIATOR <span>Admin</span></a>
             </div>
             <nav class="admin-nav">
                 <div class="admin-nav-label">Overview</div>
@@ -86,10 +86,23 @@
         </main>
     </div>
 
+    <button class="admin-hamburger" id="admin-hamburger">
+        <span></span><span></span><span></span>
+    </button>
+
     <div id="toast-container" class="toast-container"></div>
     <script src="js/data.js"></script>
     <script src="js/auth.js"></script>
     <script>
+        // Admin Sidebar Toggle
+        const adminBurger = document.getElementById('admin-hamburger');
+        const adminSidebar = document.getElementById('admin-sidebar');
+        if (adminBurger && adminSidebar) {
+            adminBurger.addEventListener('click', () => {
+                adminSidebar.classList.toggle('open');
+            });
+        }
+
         if (!requireAdmin()) throw new Error('Admin required');
 
         function render() {
