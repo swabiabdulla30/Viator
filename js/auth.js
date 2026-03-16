@@ -28,6 +28,18 @@ function initNavbar() {
     if (session) {
         const initial = session.name ? session.name[0].toUpperCase() : '?';
         navActions.innerHTML = `
+      <a href="create-post.html" class="btn-premium nav-share-btn" id="nav-create-btn" style="padding: 0.7rem 1.5rem; font-size: 0.65rem; margin-top:0;">
+        SHARE STORY
+      </a>
+      <div class="nav-dropdown" id="user-dropdown">
+        <div class="nav-avatar" id="nav-avatar-btn" title="${session.name}">${initial}</div>
+        <div class="nav-dropdown-menu">
+          <a href="profile.html?id=${session.id}">👤 My Profile</a>
+          <a href="bookmarks.html">🔖 Bookmarks</a>
+          ${session.role === 'admin' ? '<a href="admin-dashboard.html">🛡️ Admin Panel</a>' : ''}
+          <div class="divider"></div>
+          <button onclick="logout()">🚪 Log Out</button>
+        </div>
       </div>`;
         
         // Mobile menu sync
