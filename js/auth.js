@@ -51,8 +51,8 @@ function initNavbar() {
         });
     } else {
         navActions.innerHTML = `
-      <a href="login.html" class="btn-text">Log In</a>
-      <a href="register.html" class="btn-outline">Write to us</a>`;
+      <a href="login.html" class="btn-text nav-login-link">Log In</a>
+      <a href="register.html" class="btn-outline nav-signup-link">+ SHARE STORY</a>`;
     }
 }
 
