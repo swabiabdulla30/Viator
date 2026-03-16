@@ -16,6 +16,10 @@
             align-items: start;
         }
 
+        .feed-layout > * {
+            min-width: 0;
+        }
+
         .feed-sidebar {
             position: sticky;
             top: calc(var(--nav-height) + 2rem);
@@ -30,10 +34,13 @@
         @media(max-width:900px) {
             .feed-layout {
                 grid-template-columns: 1fr;
+                gap: 1.5rem;
             }
 
             .feed-sidebar {
                 position: static;
+                width: 100%;
+                overflow: hidden;
             }
         }
     </style>

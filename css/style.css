@@ -1072,6 +1072,8 @@ body:not(.home) .navbar,
   outline: none;
   color: var(--text-main);
   font-size: 0.9rem;
+  width: 100%;
+  min-width: 0;
 }
 
 .search-bar input::placeholder {
@@ -2015,16 +2017,18 @@ body:not(.home) .navbar,
 
   /* Search Bar Mobile Refinement */
   .search-bar {
-    padding: 0.35rem 0.35rem 0.35rem 1rem;
+    padding: 0.35rem 0.35rem 0.35rem 0.75rem;
   }
 
   .search-bar input {
     font-size: 0.8rem;
+    min-width: 0;
   }
 
   .search-bar-btn {
-    padding: 0.4rem 0.75rem;
-    font-size: 0.75rem;
+    padding: 0.4rem 0.6rem;
+    font-size: 0.7rem;
+    flex-shrink: 0;
   }
 }
 
