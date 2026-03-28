@@ -65,13 +65,13 @@ function initNavbar() {
     } else {
         navActions.innerHTML = `
       <a href="login.html" class="btn-text nav-login-link">Log In</a>
-      <a href="register.html" class="btn-outline nav-signup-link">SHARE STORY</a>`;
+      <a href="create-post.html" class="btn-outline nav-signup-link">SHARE STORY</a>`;
       
         // Mobile menu sync (logged out)
         const mobileActions = document.querySelector('.mobile-nav-actions');
         if (mobileActions) {
             mobileActions.innerHTML = `
-                <a href="register.html" class="btn-premium" style="margin-top:0;">SHARE STORY <span class="arrow">→</span></a>
+                <a href="create-post.html" class="btn-premium" style="margin-top:0;">SHARE STORY <span class="arrow">→</span></a>
                 <div style="margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem;">
                     <a href="login.html" style="font-size: 1.2rem; border: none; padding: 0.5rem 0;">Log In</a>
                 </div>

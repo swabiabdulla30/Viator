@@ -82,7 +82,8 @@
     <script src="js/effects.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            redirectIfLoggedIn('feed.html');
+            const next = new URLSearchParams(window.location.search).get('next');
+            redirectIfLoggedIn(next || 'create-post.html');
 
             document.getElementById('toggle-pw').addEventListener('click', function () {
                 const pw = document.getElementById('reg-password');
@@ -115,7 +116,7 @@
                 setTimeout(() => {
                     const result = register({ name, email, password });
                     if (result.success) {
-                        window.location.href = 'feed.html';
+                        window.location.href = next ? decodeURIComponent(next) : 'create-post.html';
                     } else {
                         document.getElementById('form-alert').innerHTML = `<p style="color: var(--danger); font-size: 0.8rem; margin-bottom: 1rem;">${result.error}</p>`;
                         btn.disabled = false;

@@ -61,7 +61,7 @@
                     </button>
                 </form>
 
-                <p class="auth-link">Not yet part of the journal? <a href="register.html">Apply to join</a></p>
+                <p class="auth-link">Not yet part of the journal? <a href="register.html" id="signup-link">Apply to join</a></p>
             </div>
         </div>
     </div>
@@ -71,6 +71,13 @@
     <script src="js/auth.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            const next = new URLSearchParams(window.location.search).get('next');
+            if (next) {
+                const signupLink = document.getElementById('signup-link');
+                if (signupLink) {
+                    signupLink.href = `register.html?next=${encodeURIComponent(next)}`;
+                }
+            }
             redirectIfLoggedIn('feed.html');
             redirectIfAdminLoggedIn('admin-dashboard.html');
 

@@ -391,7 +391,6 @@ p {
   border: none;
   width: 100% !important;
   max-width: 100vw !important;
-  overflow-x: hidden !important;
   box-sizing: border-box !important;
 }
 
@@ -486,14 +485,21 @@ body:not(.home) .navbar,
   width: 36px;
   height: 36px;
   border-radius: 50%; /* Only circle exception */
-  background: var(--text-main);
+  background: var(--text-main); /* Brand Navy */
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--font-sans);
   font-size: 0.8rem;
+  font-weight: 600;
   color: white;
   cursor: pointer;
+  transition: var(--transition);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.nav-avatar:hover {
+  background: var(--accent);
 }
 
 .nav-dropdown {
@@ -501,43 +507,55 @@ body:not(.home) .navbar,
 }
 .nav-dropdown-menu {
   position: absolute;
-  top: calc(100% + 1rem);
+  top: calc(100% + 12px);
   right: 0;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
-  padding: 1rem 0;
-  min-width: 200px;
+  background: #ffffff !important;
+  border: 1px solid rgba(0,0,0,0.15) !important;
+  padding: 8px 0;
+  min-width: 220px;
   opacity: 0;
   pointer-events: none;
-  transform: translateY(-5px);
-  transition: var(--transition);
+  transform: translateY(-10px);
+  transition: all 0.25s cubic-bezier(0.2, 0, 0, 1);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  z-index: 9999 !important;
+  display: block !important;
 }
+
 .nav-dropdown.open .nav-dropdown-menu {
   opacity: 1;
   pointer-events: all;
   transform: translateY(0);
 }
+
 .nav-dropdown-menu a, .nav-dropdown-menu button {
-  display: block;
-  padding: 0.8rem 1.5rem;
-  color: var(--text-main);
-  font-size: 0.75rem;
-  letter-spacing: 0.1em;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px;
+  padding: 12px 20px !important;
+  color: #1e293b !important; /* Force Brand Navy */
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.03em;
   text-transform: uppercase;
   text-decoration: none;
-  background: none;
+  background: transparent;
   border: none;
   width: 100%;
   text-align: left;
+  transition: all 0.2s;
+  line-height: 1.4;
 }
+
 .nav-dropdown-menu a:hover, .nav-dropdown-menu button:hover {
-  background: var(--bg-primary);
-  color: var(--accent);
+  background: #f8fafc !important;
+  color: var(--accent) !important;
 }
+
 .nav-dropdown-menu .divider {
   height: 1px;
-  background: var(--border);
-  margin: 0.5rem 0;
+  background: rgba(0,0,0,0.08);
+  margin: 8px 0;
 }
 
 /* ── Cards (Fallback) ── */
