@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inbox – VIATOR Admin</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="admin-layout">
+        <aside class="admin-sidebar" id="admin-sidebar">
+            <div class="admin-sidebar-logo">
+                <a href="admin-dashboard.html"><svg class="nav-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 8px;"><path d="M4 4L12 20L20 4H16.5L12 14L7.5 4H4Z" fill="currentColor"/><path d="M12 8L11 11H13L12 8Z" fill="white"/></svg> VIATOR <span>Admin</span></a>
+            </div>
+            <nav class="admin-nav">
+                <div class="admin-nav-label">Overview</div>
+                <a class="admin-nav-item" href="admin-dashboard.html"><span class="nav-icon">📊</span> Dashboard</a>
+                <div class="admin-nav-label" style="margin-top:1rem;">Content</div>
+                <a class="admin-nav-item" href="admin-posts.html"><span class="nav-icon">📝</span> Posts</a>
+                <a class="admin-nav-item" href="admin-users.html"><span class="nav-icon">👥</span> Users</a>
+                <a class="admin-nav-item active" href="admin-reports.html"><span class="nav-icon">🚨</span> Reports
+                    <span class="admin-nav-badge" id="sb-reports">0</span></a>
+                <div class="admin-nav-label" style="margin-top:1rem;">Account</div>
+                <a class="admin-nav-item" href="index.html" target="_blank"><span class="nav-icon">🌐</span> View Site</a>
+                <button class="admin-nav-item" style="width:100%;text-align:left;" onclick="logout()"><span class="nav-icon">🚪</span> Log Out</button>
+            </nav>
+        </aside>
+
+        <main class="admin-main">
+            <div class="admin-topbar">
+                <div>
+                    <div class="admin-page-title">Inbox</div>
+                    <p style="color:var(--text-muted);font-size:0.85rem;margin:0;" id="message-count-label"></p>
+                </div>
+                <div style="display:flex;gap:0.75rem;">
+                    <button class="btn btn-ghost btn-sm" onclick="exportReports()">📥 Export JSON</button>
+                </div>
+            </div>
+
+            <div style="display:flex;gap:0.5rem;margin-bottom:1.5rem;">
+                <button class="tab-btn active" data-ms="all" onclick="setMStatus(this)">All</button>
+                <button class="tab-btn" data-ms="unread" onclick="setMStatus(this)">📬 Unread</button>
+                <button class="tab-btn" data-ms="read" onclick="setMStatus(this)">📭 Read</button>
+            </div>
+
+            <!-- Summary Stats -->
+            <div class="grid-3" style="margin-bottom:2rem;" id="message-stats"></div>
+
+            <div class="table-wrap">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Sender</th>
+                            <th>Email</th>
+                            <th>Message</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="messages-tbody"></tbody>
+                </table>
+            </div>
+            <div id="messages-empty" class="empty-state" style="display:none;">
+                <div class="empty-icon">✅</div>
+                <h3 class="empty-title">Inbox Zero</h3>
+                <p class="empty-desc">All caught up! No unread messages.</p>
+            </div>
+        </main>
+    </div>
+
+    <button class="admin-hamburger" id="admin-hamburger">
+        <span></span><span></span><span></span>
+    </button>
+
+    <div id="toast-container" class="toast-container"></div>
+    <script src="js/data.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Admin Sidebar Toggle
+        const adminBurger = document.getElementById('admin-hamburger');
+        const adminSidebar = document.querySelector('.admin-sidebar');
+        if (adminBurger && adminSidebar) {
+            adminBurger.addEventListener('click', () => {
+                adminSidebar.classList.toggle('open');
+            });
+        }
+
+        if (!requireAdmin()) throw new Error();
+        let mStatus = 'all';
+
+        function setMStatus(btn) {
+            document.querySelectorAll('[data-ms]').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            mStatus = btn.dataset.ms;
+            renderMessages();
+        }
+
+        function renderMessages() {
+            let messages = MessagesDB.getAll();
+            const unreadCount = messages.filter(m => m.status === 'unread').length;
+            const readCount = messages.filter(m => m.status === 'read').length;
+            
+            const sbMessages = document.getElementById('sb-messages');
+            if (sbMessages) sbMessages.textContent = unreadCount;
+
+            document.getElementById('message-stats').innerHTML = `
+      <div class="stat-card">
+        <div class="stat-icon">✉️</div>
+        <div class="stat-value">${messages.length}</div>
+        <div class="stat-label">Total Messages</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📬</div>
+        <div class="stat-value">${unreadCount}</div>
+        <div class="stat-label">Unread</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📭</div>
+        <div class="stat-value">${readCount}</div>
+        <div class="stat-label">Read</div>
+      </div>`;
+
+            if (mStatus !== 'all') messages = messages.filter(m => m.status === mStatus);
+            messages.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+            document.getElementById('message-count-label').textContent = `${messages.length} message${messages.length !== 1 ? 's' : ''}`;
+
+            const tbody = document.getElementById('messages-tbody');
+            const empty = document.getElementById('messages-empty');
+            if (messages.length === 0) { tbody.innerHTML = ''; empty.style.display = 'flex'; return; }
+            empty.style.display = 'none';
+
+            tbody.innerHTML = messages.map(m => {
+                const bc = m.status === 'unread' ? 'badge-warning' : 'badge-success';
+                const fw = m.status === 'unread' ? 'font-weight:700;' : 'font-weight:400;';
+                return `<tr>
+        <td style="color:var(--text-primary);${fw}font-size:0.85rem;">${m.name}</td>
+        <td style="font-size:0.8rem;color:var(--text-secondary);">${m.email}</td>
+        <td>
+          <div style="font-size:0.85rem;color:var(--text-main);max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${m.message}">${m.message}</div>
+        </td>
+        <td style="font-size:0.8rem;color:var(--text-muted);">${timeAgo(m.createdAt)}</td>
+        <td><span class="badge ${bc}">${m.status}</span></td>
+        <td>
+          <div class="table-actions">
+            ${m.status === 'unread' ? `<button class="btn btn-primary btn-sm" onclick="markAsRead('${m.id}')">✓ Mark Read</button>` : ''}
+            <button class="btn btn-ghost btn-sm" onclick="deleteMessage('${m.id}')" title="Delete">🗑️</button>
+          </div>
+        </td>
+      </tr>`;
+            }).join('');
+        }
+
+        function markAsRead(id) {
+            MessagesDB.markRead(id);
+            showToast('Message marked as read. ✅', 'success');
+            renderMessages();
+        }
+
+        function deleteMessage(id) {
+            confirmAction('Permanently delete this message?', () => {
+                MessagesDB.delete(id); showToast('Message deleted.', 'info'); renderMessages();
+            });
+        }
+
+        function exportReports() {
+            const messages = MessagesDB.getAll();
+            const blob = new Blob([JSON.stringify(messages, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = \`viator-messages-\${new Date().toISOString().split('T')[0]}.json\`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('Messages exported! 📥', 'success');
+        }
+
+        document.addEventListener('DOMContentLoaded', renderMessages);
+    </script>
+</body>
+
+</html>

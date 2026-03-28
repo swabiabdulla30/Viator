@@ -115,7 +115,7 @@
           <a href="experience-detail.html?id=${p.id}" target="_blank" style="color:var(--text-primary);font-weight:600;font-size:0.85rem;">
             ${p.title.substring(0, 55)}${p.title.length > 55 ? '�' : ''}
           </a>
-          <div style="font-size:0.75rem;color:var(--text-muted);">?? ${p.destination}</div>
+          <div style="font-size:0.75rem;color:var(--text-muted);">📍 ${p.destination}</div>
         </td>
         <td style="font-size:0.85rem;color:var(--text-secondary);">${author?.name || '-'}</td>
         <td><span class="badge badge-muted" style="font-size:0.72rem;">${p.travelStyle || '-'}</span></td>
@@ -123,16 +123,16 @@
         <td><span class="badge ${bc}">${p.status}</span></td>
         <td>
           <div class="table-actions">
-            ${p.status !== 'approved' ? `<button class="btn btn-primary btn-sm" onclick="approvePost('${p.id}')">?</button>` : ''}
-            ${p.status !== 'rejected' ? `<button class="btn btn-ghost btn-sm" onclick="rejectPost('${p.id}')">?</button>` : ''}
-            <button class="btn btn-danger btn-sm" onclick="deletePost('${p.id}')">???</button>
+            ${p.status !== 'approved' ? `<button class="btn btn-primary btn-sm" onclick="approvePost('${p.id}')">✓</button>` : ''}
+            ${p.status !== 'rejected' ? `<button class="btn btn-ghost btn-sm" onclick="rejectPost('${p.id}')">✕</button>` : ''}
+            <button class="btn btn-danger btn-sm" onclick="deletePost('${p.id}')">🗑️</button>
           </div>
         </td>
       </tr>`;
             }).join('');
         }
 
-        function approvePost(id) { PostDB.setStatus(id, 'approved'); showToast('Post approved! ?', 'success'); renderPosts(); }
+        function approvePost(id) { PostDB.setStatus(id, 'approved'); showToast('Post approved! ✅', 'success'); renderPosts(); }
         function rejectPost(id) { PostDB.setStatus(id, 'rejected'); showToast('Post rejected.', 'info'); renderPosts(); }
         function deletePost(id) {
             confirmAction('Permanently delete this post?', () => {

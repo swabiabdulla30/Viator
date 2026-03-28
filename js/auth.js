@@ -247,12 +247,21 @@ function showContactModal() {
 
     overlay.querySelector('#contact-form').addEventListener('submit', (e) => {
         e.preventDefault();
+        
+        const inputs = e.target.querySelectorAll('.form-input');
+        const name = inputs[0].value;
+        const email = inputs[1].value;
+        const message = inputs[2].value;
+
         const btn = e.target.querySelector('button[type="submit"]');
         btn.innerHTML = 'SENDING...';
         btn.disabled = true;
 
         // Simulate network request
         setTimeout(() => {
+            if (typeof MessagesDB !== 'undefined') {
+                MessagesDB.create({ name, email, message });
+            }
             close();
             showToast('Message sent successfully! We will be in touch soon.', 'success');
         }, 800);

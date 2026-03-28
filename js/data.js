@@ -8,6 +8,7 @@ const DB = {
   COMMENTS: 'viator_comments',
   REPORTS:  'viator_reports',
   SESSION:  'viator_session',
+  MESSAGES: 'viator_messages',
 };
 
 /* ── Helpers ── */
@@ -260,9 +261,10 @@ function seedData() {
     dbSet(DB.POSTS, postsToSet.length ? postsToSet : posts);
   }
 
-  // Comments and Reports (only if empty)
+  // Comments, Reports, Messages (only if empty)
   if (dbGet(DB.COMMENTS).length === 0) dbSet(DB.COMMENTS, comments);
   if (localStorage.getItem(DB.REPORTS) === null) dbSet(DB.REPORTS, []);
+  if (localStorage.getItem(DB.MESSAGES) === null) dbSet(DB.MESSAGES, []);
 
   // Force update visuals if needed
   let visualUpdate = false;
@@ -481,6 +483,34 @@ const ReportDB = {
   },
 };
 
+/* ══ MESSAGE OPERATIONS ══ */
+const MessagesDB = {
+  getAll: () => dbGet(DB.MESSAGES),
+  save: (m) => dbSet(DB.MESSAGES, m),
+
+  create(data) {
+    const messages = this.getAll();
+    const msg = {
+      id: uid(), name: data.name, email: data.email,
+      message: data.message, status: 'unread',
+      createdAt: new Date().toISOString()
+    };
+    messages.push(msg);
+    this.save(messages);
+    return msg;
+  },
+
+  markRead(id) {
+    const messages = this.getAll();
+    const idx = messages.findIndex(m => m.id === id);
+    if (idx !== -1) { messages[idx].status = 'read'; this.save(messages); }
+  },
+
+  delete(id) {
+    this.save(this.getAll().filter(m => m.id !== id));
+  },
+};
+
 /* ══ SESSION ══ */
 const SessionDB = {
   get: () => dbGetObj(DB.SESSION),
@@ -495,11 +525,11 @@ const SessionDB = {
   },
 };
 
-/* ══ STATS ══ */
 function getAdminStats() {
   const users = UserDB.getAll().filter(u => u.role !== 'admin');
   const posts = PostDB.getAll();
   const reports = ReportDB.getAll();
+  const messages = MessagesDB.getAll();
   return {
     totalUsers: users.length,
     activeUsers: users.filter(u => u.status === 'active').length,
@@ -508,6 +538,8 @@ function getAdminStats() {
     rejectedPosts: posts.filter(p => p.status === 'rejected').length,
     totalReports: reports.length,
     pendingReports: reports.filter(r => r.status === 'pending').length,
+    totalMessages: messages.length,
+    unreadMessages: messages.filter(m => m.status === 'unread').length,
   };
 }
 
