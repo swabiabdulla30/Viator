@@ -200,13 +200,88 @@ function confirmAction(message, onConfirm) {
     overlay.querySelector('#confirm-ok').onclick = () => { close(); onConfirm(); };
 }
 
+/* ── Contact Modal ── */
+function showContactModal() {
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    setTimeout(() => overlay.classList.add('open'), 10); // slight delay for transition
+    overlay.style.zIndex = '3000'; // ensure it's above navbar
+    overlay.innerHTML = `
+    <div class="modal" style="max-width:500px; padding: 3rem 2rem;">
+      <div class="modal-header">
+        <h3 class="modal-title" style="font-family: var(--font-head); font-size: 2rem; font-weight: 400;">Get in Touch</h3>
+        <button class="modal-close" id="contact-cancel">✕</button>
+      </div>
+      <p style="color:var(--text-muted); margin-bottom: 2rem; font-size: 0.9rem;">Have a question or a story idea? Drop us a message and our editorial team will get back to you.</p>
+      
+      <form id="contact-form" class="auth-form" style="display:flex; flex-direction:column; gap:1.5rem;">
+        <div class="form-group" style="margin-bottom:0;">
+          <label class="form-label">Name</label>
+          <input type="text" class="form-input" required placeholder="Your Name">
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-input" required placeholder="your.email@example.com">
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
+          <label class="form-label">Message</label>
+          <textarea class="form-input form-textarea" required placeholder="How can we help you?" style="min-height: 120px; resize: vertical; border-bottom: 1px solid rgba(26,26,26,0.2); width: 100%; font-family: var(--font-sans);"></textarea>
+        </div>
+        <button type="submit" class="btn-premium" style="margin-top: 1rem; width: 100%;">SEND MESSAGE <span class="arrow">→</span></button>
+      </form>
+    </div>`;
+
+    document.body.appendChild(overlay);
+    
+    const close = () => {
+        overlay.classList.remove('open');
+        setTimeout(() => overlay.remove(), 300);
+    };
+
+    overlay.querySelector('#contact-cancel').onclick = close;
+    
+    // Close on overlay click
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) close();
+    });
+
+    overlay.querySelector('#contact-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const btn = e.target.querySelector('button[type="submit"]');
+        btn.innerHTML = 'SENDING...';
+        btn.disabled = true;
+
+        // Simulate network request
+        setTimeout(() => {
+            close();
+            showToast('Message sent successfully! We will be in touch soon.', 'success');
+        }, 800);
+    });
+}
+
 /* ── Common Init on page load ── */
 document.addEventListener('DOMContentLoaded', () => {
     initNavbar();
-    initMobileNav();
-    // Highlight active nav link
+    // highlight active nav link
     const path = window.location.pathname.split('/').pop();
     document.querySelectorAll('.nav-links-item').forEach(a => {
         if (a.getAttribute('href') === path) a.classList.add('active');
+    });
+
+    // Contact Modal Hook (Event Delegation)
+    document.body.addEventListener('click', (e) => {
+        const link = e.target.closest('a[href="#contact"]');
+        if (link) {
+            e.preventDefault();
+            // Close mobile menu if it is open
+            const mobileNav = document.querySelector('.mobile-nav');
+            const hamburger = document.querySelector('.hamburger');
+            if (mobileNav && mobileNav.classList.contains('open')) {
+                mobileNav.classList.remove('open');
+                if (hamburger) hamburger.classList.remove('active');
+                document.body.classList.remove('no-scroll');
+            }
+            showContactModal();
+        }
     });
 });
